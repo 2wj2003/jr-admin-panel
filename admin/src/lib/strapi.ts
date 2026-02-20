@@ -109,28 +109,40 @@ export async function fetchCollection(
 
   // Handle different response formats
   let results, pagination;
+  let isPublicApi = false;
+
   if (response.data?.results) {
-    // Content Manager API format
+    // Content Manager API format: { results: [...flat items...], pagination: {...} }
     results = response.data.results;
     pagination = response.data.pagination || { page: 1, pageSize: 10, pageCount: 1, total: 0 };
+    isPublicApi = false;
   } else if (response.data?.data) {
-    // Public API format
+    // Public API format: { data: [{ id, attributes: {...} }], meta: {...} }
     results = response.data.data;
     pagination = response.data.meta?.pagination || { page: 1, pageSize: 10, pageCount: 1, total: 0 };
+    isPublicApi = true;
   } else if (Array.isArray(response.data)) {
     // Simple array format
     results = response.data;
     pagination = { page: 1, pageSize: results.length, pageCount: 1, total: results.length };
+    isPublicApi = false;
   } else {
     results = [];
     pagination = { page: 1, pageSize: 10, pageCount: 1, total: 0 };
+    isPublicApi = false;
   }
 
-  // Wrap results to match StrapiEntity format for backward compatibility
-  const data: StrapiEntity[] = results.map((item: any) => ({
-    id: item.id,
-    attributes: item,
-  }));
+  // Wrap results to match StrapiEntity format
+  // - Content Manager API: item is flat { id, name, ... } → wrap as attributes
+  // - Public API: item already has { id, attributes: { name, ... } } → use as-is
+  const data: StrapiEntity[] = results.map((item: any) => {
+    if (isPublicApi && item.attributes) {
+      // Public API already has attributes wrapper
+      return { id: item.id, attributes: item.attributes };
+    }
+    // Content Manager API: flat format, wrap it
+    return { id: item.id, attributes: item };
+  });
 
   return {
     data,
