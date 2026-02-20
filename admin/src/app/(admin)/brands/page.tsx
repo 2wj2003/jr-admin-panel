@@ -2,7 +2,6 @@
 
 import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -156,22 +155,20 @@ export default function BrandsPage() {
                 </TableHeader>
                 <TableBody>
                   {brands.map((brand) => {
-                    const attrs = brand.attributes;
-                    const logo = attrs.logo?.data;
+                    const attrs = brand.attributes || brand;
+                    const logo = attrs.logo?.data || attrs.logo;
                     const logoUrl = logo ? getStrapiMediaUrl(logo) : null;
-                    const productCount = attrs.products?.data?.length || 0;
+                    const productCount = attrs.products?.data?.length || attrs.products?.length || 0;
 
                     return (
                       <TableRow key={brand.id}>
                         <TableCell>
                           {logoUrl ? (
-                            <div className="relative w-10 h-10 rounded overflow-hidden bg-white border">
-                              <Image
+                            <div className="w-10 h-10 rounded overflow-hidden bg-white border">
+                              <img
                                 src={logoUrl}
                                 alt={attrs.name || ""}
-                                fill
-                                className="object-contain p-1"
-                                sizes="40px"
+                                className="w-full h-full object-contain p-1"
                               />
                             </div>
                           ) : (

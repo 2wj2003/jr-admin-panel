@@ -2,7 +2,6 @@
 
 import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -157,9 +156,10 @@ export default function BlogsPage() {
                 </TableHeader>
                 <TableBody>
                   {blogs.map((blog) => {
-                    const attrs = blog.attributes;
-                    const coverImage = attrs.coverImage?.data;
-                    const category = attrs.category?.data;
+                    const attrs = blog.attributes || blog;
+                    const coverImage = attrs.coverImage?.data || attrs.coverImage;
+                    const rawCategory = attrs.category?.data || attrs.category;
+                    const categoryName = rawCategory?.attributes?.name || rawCategory?.name || null;
                     const imageUrl = coverImage
                       ? getStrapiMediaUrl(coverImage)
                       : null;
@@ -168,13 +168,11 @@ export default function BlogsPage() {
                       <TableRow key={blog.id}>
                         <TableCell>
                           {imageUrl ? (
-                            <div className="relative w-12 h-12 rounded overflow-hidden bg-muted">
-                              <Image
+                            <div className="w-12 h-12 rounded overflow-hidden bg-muted">
+                              <img
                                 src={imageUrl}
                                 alt={attrs.title || ""}
-                                fill
-                                className="object-cover"
-                                sizes="48px"
+                                className="w-full h-full object-cover"
                               />
                             </div>
                           ) : (
@@ -185,7 +183,7 @@ export default function BlogsPage() {
                         </TableCell>
                         <TableCell>
                           <div>
-                            <p className="font-medium">{attrs.title}</p>
+                            <p className="font-medium">{attrs.title || "-"}</p>
                             {attrs.description && (
                               <p className="text-xs text-muted-foreground line-clamp-1">
                                 {attrs.description}
@@ -194,9 +192,9 @@ export default function BlogsPage() {
                           </div>
                         </TableCell>
                         <TableCell>
-                          {category ? (
+                          {categoryName ? (
                             <Badge variant="secondary">
-                              {category.attributes.name}
+                              {categoryName}
                             </Badge>
                           ) : (
                             <span className="text-muted-foreground text-sm">-</span>

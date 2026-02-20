@@ -155,10 +155,11 @@ export default function CategoriesPage() {
                 </TableHeader>
                 <TableBody>
                   {categories.map((cat) => {
-                    const attrs = cat.attributes;
-                    const parent = attrs.parent?.data;
-                    const productCount = attrs.products?.data?.length || 0;
-                    const blogCount = attrs.blogs?.data?.length || 0;
+                    const attrs = cat.attributes || cat;
+                    const rawParent = attrs.parent?.data || attrs.parent;
+                    const parent = rawParent ? { name: rawParent?.attributes?.name || rawParent?.name } : null;
+                    const productCount = attrs.products?.data?.length || attrs.products?.length || 0;
+                    const blogCount = attrs.blogs?.data?.length || attrs.blogs?.length || 0;
 
                     return (
                       <TableRow key={cat.id}>
@@ -176,7 +177,7 @@ export default function CategoriesPage() {
                         <TableCell>
                           {parent ? (
                             <Badge variant="outline">
-                              {parent.attributes.name}
+                              {parent.name}
                             </Badge>
                           ) : (
                             <span className="text-muted-foreground text-sm">

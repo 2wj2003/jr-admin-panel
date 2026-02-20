@@ -2,7 +2,6 @@
 
 import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -163,22 +162,21 @@ export default function ShowcasesPage() {
                 </TableHeader>
                 <TableBody>
                   {showcases.map((showcase) => {
-                    const attrs = showcase.attributes;
-                    const cover = attrs.cover?.data;
-                    const province = attrs.province?.data;
+                    const attrs = showcase.attributes || showcase;
+                    const cover = attrs.cover?.data || attrs.cover;
+                    const rawProvince = attrs.province?.data || attrs.province;
+                    const provinceName = rawProvince?.attributes?.name_th || rawProvince?.name_th || null;
                     const imageUrl = cover ? getStrapiMediaUrl(cover) : null;
 
                     return (
                       <TableRow key={showcase.id}>
                         <TableCell>
                           {imageUrl ? (
-                            <div className="relative w-12 h-12 rounded overflow-hidden bg-muted">
-                              <Image
+                            <div className="w-12 h-12 rounded overflow-hidden bg-muted">
+                              <img
                                 src={imageUrl}
                                 alt={attrs.title || ""}
-                                fill
-                                className="object-cover"
-                                sizes="48px"
+                                className="w-full h-full object-cover"
                               />
                             </div>
                           ) : (
@@ -200,9 +198,9 @@ export default function ShowcasesPage() {
                           )}
                         </TableCell>
                         <TableCell>
-                          {province ? (
+                          {provinceName ? (
                             <span className="text-sm">
-                              {province.attributes.name_th}
+                              {provinceName}
                             </span>
                           ) : (
                             <span className="text-muted-foreground text-sm">-</span>
