@@ -173,8 +173,9 @@ export default function ProductsPage() {
                 <TableBody>
                   {products.map((product) => {
                     const attrs = product.attributes;
-                    const coverImage = attrs.coverImage?.data;
-                    const category = attrs.category?.data;
+                    // Content Manager API returns flat format, Public API returns { data: {...} }
+                    const coverImage = attrs.coverImage?.data || attrs.coverImage;
+                    const category = attrs.category?.data || attrs.category;
                     const imageUrl = coverImage
                       ? getStrapiMediaUrl(coverImage)
                       : null;
