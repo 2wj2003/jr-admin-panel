@@ -171,10 +171,11 @@ export default function ProductsPage() {
                 </TableHeader>
                 <TableBody>
                   {products.map((product) => {
-                    const attrs = product.attributes;
-                    // Content Manager API returns flat format, Public API returns { data: {...} }
+                    // Support both flat format and nested attributes format
+                    const attrs = product.attributes || product;
                     const coverImage = attrs.coverImage?.data || attrs.coverImage;
-                    const category = attrs.category?.data || attrs.category;
+                    const rawCategory = attrs.category?.data || attrs.category;
+                    const categoryName = rawCategory?.attributes?.name || rawCategory?.name || null;
                     const imageUrl = coverImage
                       ? getStrapiMediaUrl(coverImage)
                       : null;
@@ -198,7 +199,7 @@ export default function ProductsPage() {
                         </TableCell>
                         <TableCell>
                           <div>
-                            <p className="font-medium">{attrs.name}</p>
+                            <p className="font-medium">{attrs.name || "-"}</p>
                             {attrs.slug && (
                               <p className="text-xs text-muted-foreground">
                                 /{attrs.slug}
@@ -230,9 +231,9 @@ export default function ProductsPage() {
                           </div>
                         </TableCell>
                         <TableCell>
-                          {category ? (
+                          {categoryName ? (
                             <Badge variant="secondary">
-                              {category.attributes.name}
+                              {categoryName}
                             </Badge>
                           ) : (
                             <span className="text-muted-foreground text-sm">-</span>
