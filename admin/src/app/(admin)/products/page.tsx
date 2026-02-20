@@ -2,7 +2,6 @@
 
 import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -184,13 +183,11 @@ export default function ProductsPage() {
                       <TableRow key={product.id}>
                         <TableCell>
                           {imageUrl ? (
-                            <div className="relative w-12 h-12 rounded overflow-hidden bg-muted">
-                              <Image
+                            <div className="w-12 h-12 rounded overflow-hidden bg-muted">
+                              <img
                                 src={imageUrl}
                                 alt={attrs.name || ""}
-                                fill
-                                className="object-cover"
-                                sizes="48px"
+                                className="w-full h-full object-cover"
                               />
                             </div>
                           ) : (
