@@ -20,6 +20,7 @@ import {
   StrapiPagination,
   deleteEntry,
 } from "@/lib/strapi";
+import { toast } from "sonner";
 import {
   Plus,
   Search,
@@ -80,17 +81,26 @@ export default function CategoriesPage() {
   const handlePageChange = (page: number) => loadCategories(page, search);
 
   const handleDelete = async (id: number, name: string) => {
-    if (!confirm(`คุณต้องการลบหมวดหมู่ "${name}" ใช่หรือไม่?`)) return;
-    setDeleting(id);
-    try {
-      await deleteEntry("categories", id);
-      loadCategories(pagination.page, search);
-    } catch (error) {
-      console.error("Failed to delete category:", error);
-      alert("ไม่สามารถลบหมวดหมู่ได้ กรุณาลองใหม่อีกครั้ง");
-    } finally {
-      setDeleting(null);
-    }
+    toast(`ลบหมวดหมู่ "${name}"?`, {
+      description: "การกระทำนี้ไม่สามารถย้อนกลับได้",
+      action: {
+        label: "ลบ",
+        onClick: async () => {
+          setDeleting(id);
+          try {
+            await deleteEntry("categories", id);
+            toast.success(`ลบหมวดหมู่ "${name}" สำเร็จ`);
+            loadCategories(pagination.page, search);
+          } catch (error) {
+            console.error("Failed to delete category:", error);
+            toast.error("ไม่สามารถลบหมวดหมู่ได้ กรุณาลองใหม่อีกครั้ง");
+          } finally {
+            setDeleting(null);
+          }
+        },
+      },
+      cancel: { label: "ยกเลิก", onClick: () => {} },
+    });
   };
 
   return (

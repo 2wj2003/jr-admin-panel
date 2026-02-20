@@ -19,6 +19,7 @@ import { MediaPicker } from "@/components/media-picker";
 import { RichTextEditor } from "@/components/rich-text-editor";
 import { SeoEditor, SeoData, emptySeo, parseSeoFromApi, seoToPayload } from "@/components/seo-editor";
 import { ArrowLeft, Save, Loader2 } from "lucide-react";
+import { toast } from "sonner";
 
 interface ProvinceOption {
   id: number;
@@ -87,7 +88,7 @@ export default function ShowcaseEditPage() {
       }
     } catch (error) {
       console.error("Failed to load showcase:", error);
-      alert("ไม่สามารถโหลดข้อมูลผลงานได้");
+      toast.error("ไม่สามารถโหลดข้อมูลผลงานได้");
       router.push("/showcases");
     } finally {
       setLoading(false);
@@ -117,7 +118,7 @@ export default function ShowcaseEditPage() {
     e.preventDefault();
 
     if (!form.title || !form.slug || !form.type) {
-      alert("กรุณากรอกข้อมูลที่จำเป็น: ชื่อผลงาน, Slug, ประเภท");
+      toast.error("กรุณากรอกข้อมูลที่จำเป็น: ชื่อผลงาน, Slug, ประเภท");
       return;
     }
 
@@ -135,16 +136,16 @@ export default function ShowcaseEditPage() {
 
       if (isNew) {
         await createEntry("showcases", payload);
-        alert("สร้างผลงานสำเร็จ");
+        toast.success("สร้างผลงานสำเร็จ");
       } else {
         await updateEntry("showcases", Number(showcaseId), payload);
-        alert("บันทึกผลงานสำเร็จ");
+        toast.success("บันทึกผลงานสำเร็จ");
       }
       router.push("/showcases");
     } catch (error: any) {
       console.error("Failed to save showcase:", error);
       const message = error?.response?.data?.error?.message || "ไม่สามารถบันทึกข้อมูลได้";
-      alert(message);
+      toast.error(message);
     } finally {
       setSaving(false);
     }

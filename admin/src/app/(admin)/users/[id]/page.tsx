@@ -17,6 +17,7 @@ import {
   AdminRole,
 } from "@/lib/strapi";
 import { ArrowLeft, Save, Loader2, Shield } from "lucide-react";
+import { toast } from "sonner";
 
 export default function UserEditPage() {
   const router = useRouter();
@@ -63,7 +64,7 @@ export default function UserEditPage() {
       });
     } catch (error) {
       console.error("Failed to load user:", error);
-      alert("ไม่สามารถโหลดข้อมูลผู้ใช้ได้");
+      toast.error("ไม่สามารถโหลดข้อมูลผู้ใช้ได้");
       router.push("/users");
     } finally {
       setLoading(false);
@@ -92,17 +93,17 @@ export default function UserEditPage() {
     e.preventDefault();
 
     if (!form.firstname || !form.lastname || !form.email) {
-      alert("กรุณากรอกข้อมูลที่จำเป็น: ชื่อ, นามสกุล, อีเมล");
+      toast.error("กรุณากรอกข้อมูลที่จำเป็น: ชื่อ, นามสกุล, อีเมล");
       return;
     }
 
     if (isNew && !form.password) {
-      alert("กรุณากรอกรหัสผ่านสำหรับผู้ใช้ใหม่");
+      toast.error("กรุณากรอกรหัสผ่านสำหรับผู้ใช้ใหม่");
       return;
     }
 
     if (form.selectedRoles.length === 0) {
-      alert("กรุณาเลือกบทบาทอย่างน้อย 1 บทบาท");
+      toast.error("กรุณาเลือกบทบาทอย่างน้อย 1 บทบาท");
       return;
     }
 
@@ -116,7 +117,7 @@ export default function UserEditPage() {
           password: form.password,
           roles: form.selectedRoles,
         });
-        alert("สร้างผู้ใช้สำเร็จ");
+        toast.success("สร้างผู้ใช้สำเร็จ");
       } else {
         const payload: Record<string, any> = {
           firstname: form.firstname,
@@ -129,14 +130,14 @@ export default function UserEditPage() {
           payload.password = form.password;
         }
         await updateAdminUser(Number(userId), payload);
-        alert("บันทึกผู้ใช้สำเร็จ");
+        toast.success("บันทึกผู้ใช้สำเร็จ");
       }
       router.push("/users");
     } catch (error: any) {
       console.error("Failed to save user:", error);
       const message =
         error?.response?.data?.error?.message || "ไม่สามารถบันทึกข้อมูลได้";
-      alert(message);
+      toast.error(message);
     } finally {
       setSaving(false);
     }

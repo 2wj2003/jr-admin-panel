@@ -16,6 +16,7 @@ import {
 import { fetchSingle, fetchCollection, updateEntry, createEntry } from "@/lib/strapi";
 import { SeoEditor, SeoData, emptySeo, parseSeoFromApi, seoToPayload } from "@/components/seo-editor";
 import { ArrowLeft, Save, Loader2 } from "lucide-react";
+import { toast } from "sonner";
 
 interface CategoryOption {
   id: number;
@@ -73,7 +74,7 @@ export default function CategoryEditPage() {
       }
     } catch (error) {
       console.error("Failed to load category:", error);
-      alert("ไม่สามารถโหลดข้อมูลหมวดหมู่ได้");
+      toast.error("ไม่สามารถโหลดข้อมูลหมวดหมู่ได้");
       router.push("/categories");
     } finally {
       setLoading(false);
@@ -103,7 +104,7 @@ export default function CategoryEditPage() {
     e.preventDefault();
 
     if (!form.name || !form.slug) {
-      alert("กรุณากรอกข้อมูลที่จำเป็น: ชื่อหมวดหมู่, Slug");
+      toast.error("กรุณากรอกข้อมูลที่จำเป็น: ชื่อหมวดหมู่, Slug");
       return;
     }
 
@@ -118,16 +119,16 @@ export default function CategoryEditPage() {
 
       if (isNew) {
         await createEntry("categories", payload);
-        alert("สร้างหมวดหมู่สำเร็จ");
+        toast.success("สร้างหมวดหมู่สำเร็จ");
       } else {
         await updateEntry("categories", Number(categoryId), payload);
-        alert("บันทึกหมวดหมู่สำเร็จ");
+        toast.success("บันทึกหมวดหมู่สำเร็จ");
       }
       router.push("/categories");
     } catch (error: any) {
       console.error("Failed to save category:", error);
       const message = error?.response?.data?.error?.message || "ไม่สามารถบันทึกข้อมูลได้";
-      alert(message);
+      toast.error(message);
     } finally {
       setSaving(false);
     }

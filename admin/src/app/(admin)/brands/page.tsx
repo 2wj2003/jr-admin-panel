@@ -21,6 +21,7 @@ import {
   StrapiPagination,
   deleteEntry,
 } from "@/lib/strapi";
+import { toast } from "sonner";
 import {
   Plus,
   Search,
@@ -81,17 +82,26 @@ export default function BrandsPage() {
   const handlePageChange = (page: number) => loadBrands(page, search);
 
   const handleDelete = async (id: number, name: string) => {
-    if (!confirm(`คุณต้องการลบแบรนด์ "${name}" ใช่หรือไม่?`)) return;
-    setDeleting(id);
-    try {
-      await deleteEntry("brands", id);
-      loadBrands(pagination.page, search);
-    } catch (error) {
-      console.error("Failed to delete brand:", error);
-      alert("ไม่สามารถลบแบรนด์ได้ กรุณาลองใหม่อีกครั้ง");
-    } finally {
-      setDeleting(null);
-    }
+    toast(`ลบแบรนด์ "${name}"?`, {
+      description: "การกระทำนี้ไม่สามารถย้อนกลับได้",
+      action: {
+        label: "ลบ",
+        onClick: async () => {
+          setDeleting(id);
+          try {
+            await deleteEntry("brands", id);
+            toast.success(`ลบแบรนด์ "${name}" สำเร็จ`);
+            loadBrands(pagination.page, search);
+          } catch (error) {
+            console.error("Failed to delete brand:", error);
+            toast.error("ไม่สามารถลบแบรนด์ได้ กรุณาลองใหม่อีกครั้ง");
+          } finally {
+            setDeleting(null);
+          }
+        },
+      },
+      cancel: { label: "ยกเลิก", onClick: () => {} },
+    });
   };
 
   return (

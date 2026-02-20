@@ -21,6 +21,7 @@ import {
   StrapiPagination,
   deleteEntry,
 } from "@/lib/strapi";
+import { toast } from "sonner";
 import {
   Plus,
   Search,
@@ -81,17 +82,26 @@ export default function ShowcasesPage() {
   const handlePageChange = (page: number) => loadShowcases(page, search);
 
   const handleDelete = async (id: number, title: string) => {
-    if (!confirm(`คุณต้องการลบผลงาน "${title}" ใช่หรือไม่?`)) return;
-    setDeleting(id);
-    try {
-      await deleteEntry("showcases", id);
-      loadShowcases(pagination.page, search);
-    } catch (error) {
-      console.error("Failed to delete showcase:", error);
-      alert("ไม่สามารถลบผลงานได้ กรุณาลองใหม่อีกครั้ง");
-    } finally {
-      setDeleting(null);
-    }
+    toast(`ลบผลงาน "${title}"?`, {
+      description: "การกระทำนี้ไม่สามารถย้อนกลับได้",
+      action: {
+        label: "ลบ",
+        onClick: async () => {
+          setDeleting(id);
+          try {
+            await deleteEntry("showcases", id);
+            toast.success(`ลบผลงาน "${title}" สำเร็จ`);
+            loadShowcases(pagination.page, search);
+          } catch (error) {
+            console.error("Failed to delete showcase:", error);
+            toast.error("ไม่สามารถลบผลงานได้ กรุณาลองใหม่อีกครั้ง");
+          } finally {
+            setDeleting(null);
+          }
+        },
+      },
+      cancel: { label: "ยกเลิก", onClick: () => {} },
+    });
   };
 
   const typeLabel: Record<string, string> = {

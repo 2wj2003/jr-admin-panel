@@ -12,6 +12,7 @@ import { MediaPicker } from "@/components/media-picker";
 import { RichTextEditor } from "@/components/rich-text-editor";
 import { SeoEditor, SeoData, emptySeo, parseSeoFromApi, seoToPayload } from "@/components/seo-editor";
 import { ArrowLeft, Save, Loader2 } from "lucide-react";
+import { toast } from "sonner";
 
 export default function BrandEditPage() {
   const router = useRouter();
@@ -51,7 +52,7 @@ export default function BrandEditPage() {
       }
     } catch (error) {
       console.error("Failed to load brand:", error);
-      alert("ไม่สามารถโหลดข้อมูลแบรนด์ได้");
+      toast.error("ไม่สามารถโหลดข้อมูลแบรนด์ได้");
       router.push("/brands");
     } finally {
       setLoading(false);
@@ -80,7 +81,7 @@ export default function BrandEditPage() {
     e.preventDefault();
 
     if (!form.name || !form.slug) {
-      alert("กรุณากรอกข้อมูลที่จำเป็น: ชื่อแบรนด์, Slug");
+      toast.error("กรุณากรอกข้อมูลที่จำเป็น: ชื่อแบรนด์, Slug");
       return;
     }
 
@@ -96,16 +97,16 @@ export default function BrandEditPage() {
 
       if (isNew) {
         await createEntry("brands", payload);
-        alert("สร้างแบรนด์สำเร็จ");
+        toast.success("สร้างแบรนด์สำเร็จ");
       } else {
         await updateEntry("brands", Number(brandId), payload);
-        alert("บันทึกแบรนด์สำเร็จ");
+        toast.success("บันทึกแบรนด์สำเร็จ");
       }
       router.push("/brands");
     } catch (error: any) {
       console.error("Failed to save brand:", error);
       const message = error?.response?.data?.error?.message || "ไม่สามารถบันทึกข้อมูลได้";
-      alert(message);
+      toast.error(message);
     } finally {
       setSaving(false);
     }

@@ -20,6 +20,7 @@ import { MediaPicker } from "@/components/media-picker";
 import { RichTextEditor } from "@/components/rich-text-editor";
 import { SeoEditor, SeoData, emptySeo, parseSeoFromApi, seoToPayload } from "@/components/seo-editor";
 import { ArrowLeft, Save, Loader2 } from "lucide-react";
+import { toast } from "sonner";
 
 interface CategoryOption {
   id: number;
@@ -82,7 +83,7 @@ export default function BlogEditPage() {
       }
     } catch (error) {
       console.error("Failed to load blog:", error);
-      alert("ไม่สามารถโหลดข้อมูลบทความได้");
+      toast.error("ไม่สามารถโหลดข้อมูลบทความได้");
       router.push("/blogs");
     } finally {
       setLoading(false);
@@ -112,12 +113,12 @@ export default function BlogEditPage() {
     e.preventDefault();
 
     if (!form.title || !form.slug || !form.description) {
-      alert("กรุณากรอกข้อมูลที่จำเป็น: ชื่อบทความ, Slug, คำอธิบาย");
+      toast.error("กรุณากรอกข้อมูลที่จำเป็น: ชื่อบทความ, Slug, คำอธิบาย");
       return;
     }
 
     if (form.description.length < 50) {
-      alert("คำอธิบายต้องมีอย่างน้อย 50 ตัวอักษร");
+      toast.error("คำอธิบายต้องมีอย่างน้อย 50 ตัวอักษร");
       return;
     }
 
@@ -135,16 +136,16 @@ export default function BlogEditPage() {
 
       if (isNew) {
         await createEntry("blogs", payload);
-        alert("สร้างบทความสำเร็จ");
+        toast.success("สร้างบทความสำเร็จ");
       } else {
         await updateEntry("blogs", Number(blogId), payload);
-        alert("บันทึกบทความสำเร็จ");
+        toast.success("บันทึกบทความสำเร็จ");
       }
       router.push("/blogs");
     } catch (error: any) {
       console.error("Failed to save blog:", error);
       const message = error?.response?.data?.error?.message || "ไม่สามารถบันทึกข้อมูลได้";
-      alert(message);
+      toast.error(message);
     } finally {
       setSaving(false);
     }
@@ -155,11 +156,11 @@ export default function BlogEditPage() {
     try {
       const uid = "api::blog.blog";
       await api.post(`/content-manager/collection-types/${uid}/${blogId}/actions/publish`);
-      alert("เผยแพร่บทความสำเร็จ");
+      toast.success("เผยแพร่บทความสำเร็จ");
       loadBlog();
     } catch (error) {
       console.error("Failed to publish:", error);
-      alert("ไม่สามารถเผยแพร่ได้");
+      toast.error("ไม่สามารถเผยแพร่ได้");
     }
   };
 
@@ -168,11 +169,11 @@ export default function BlogEditPage() {
     try {
       const uid = "api::blog.blog";
       await api.post(`/content-manager/collection-types/${uid}/${blogId}/actions/unpublish`);
-      alert("ยกเลิกเผยแพร่สำเร็จ");
+      toast.success("ยกเลิกเผยแพร่สำเร็จ");
       loadBlog();
     } catch (error) {
       console.error("Failed to unpublish:", error);
-      alert("ไม่สามารถยกเลิกเผยแพร่ได้");
+      toast.error("ไม่สามารถยกเลิกเผยแพร่ได้");
     }
   };
 

@@ -21,6 +21,7 @@ import {
   StrapiPagination,
   deleteEntry,
 } from "@/lib/strapi";
+import { toast } from "sonner";
 import {
   Plus,
   Search,
@@ -81,17 +82,26 @@ export default function BlogsPage() {
   const handlePageChange = (page: number) => loadBlogs(page, search);
 
   const handleDelete = async (id: number, title: string) => {
-    if (!confirm(`คุณต้องการลบบทความ "${title}" ใช่หรือไม่?`)) return;
-    setDeleting(id);
-    try {
-      await deleteEntry("blogs", id);
-      loadBlogs(pagination.page, search);
-    } catch (error) {
-      console.error("Failed to delete blog:", error);
-      alert("ไม่สามารถลบบทความได้ กรุณาลองใหม่อีกครั้ง");
-    } finally {
-      setDeleting(null);
-    }
+    toast(`ลบบทความ "${title}"?`, {
+      description: "การกระทำนี้ไม่สามารถย้อนกลับได้",
+      action: {
+        label: "ลบ",
+        onClick: async () => {
+          setDeleting(id);
+          try {
+            await deleteEntry("blogs", id);
+            toast.success(`ลบบทความ "${title}" สำเร็จ`);
+            loadBlogs(pagination.page, search);
+          } catch (error) {
+            console.error("Failed to delete blog:", error);
+            toast.error("ไม่สามารถลบบทความได้ กรุณาลองใหม่อีกครั้ง");
+          } finally {
+            setDeleting(null);
+          }
+        },
+      },
+      cancel: { label: "ยกเลิก", onClick: () => {} },
+    });
   };
 
   return (

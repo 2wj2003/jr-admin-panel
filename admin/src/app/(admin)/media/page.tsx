@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback, useRef } from "react";
-import Image from "next/image";
+import { toast } from "sonner";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -125,9 +125,7 @@ export default function MediaLibraryPage() {
       await loadFiles(pagination.page, search);
     } catch (error: any) {
       console.error("Upload failed:", error);
-      alert(
-        `อัปโหลดไม่สำเร็จ: ${error?.response?.data?.error?.message || error?.message || "Unknown error"}`
-      );
+      toast.error(`อัปโหลดไม่สำเร็จ: ${error?.response?.data?.error?.message || error?.message || "Unknown error"}`);
     } finally {
       setUploading(false);
       if (fileInputRef.current) fileInputRef.current.value = "";
@@ -135,10 +133,21 @@ export default function MediaLibraryPage() {
   };
 
   const handleDelete = async (file: MediaFile) => {
-    if (!confirm(`ต้องการลบไฟล์ "${file.name}" หรือไม่?`)) return;
+    toast(`ลบไฟล์ "${file.name}"?`, {
+      description: "การกระทำนี้ไม่สามารถย้อนกลับได้",
+      action: {
+        label: "ลบ",
+        onClick: () => confirmDelete(file),
+      },
+      cancel: { label: "ยกเลิก", onClick: () => {} },
+    });
+  };
+
+  const confirmDelete = async (file: MediaFile) => {
     setDeleting(file.id);
     try {
       await deleteMediaFile(file.id);
+      toast.success(`ลบไฟล์ "${file.name}" สำเร็จ`);
       await loadFiles(pagination.page, search);
       if (selectedFile?.id === file.id) {
         setDetailOpen(false);
@@ -146,9 +155,7 @@ export default function MediaLibraryPage() {
       }
     } catch (error: any) {
       console.error("Delete failed:", error);
-      alert(
-        `ลบไม่สำเร็จ: ${error?.response?.data?.error?.message || error?.message || "Unknown error"}`
-      );
+      toast.error(`ลบไม่สำเร็จ: ${error?.response?.data?.error?.message || error?.message || "Unknown error"}`);
     } finally {
       setDeleting(null);
     }
@@ -266,13 +273,10 @@ export default function MediaLibraryPage() {
                   >
                     <div className="aspect-square bg-muted flex items-center justify-center">
                       {isImage && displayUrl ? (
-                        <Image
+                        <img
                           src={displayUrl}
                           alt={file.alternativeText || file.name}
-                          width={200}
-                          height={200}
                           className="w-full h-full object-cover"
-                          unoptimized
                         />
                       ) : (
                         <FileIcon className="h-10 w-10 text-muted-foreground" />
@@ -329,13 +333,10 @@ export default function MediaLibraryPage() {
                   >
                     <div className="w-10 h-10 rounded bg-muted flex items-center justify-center flex-shrink-0 overflow-hidden">
                       {isImage && displayUrl ? (
-                        <Image
+                        <img
                           src={displayUrl}
                           alt={file.alternativeText || file.name}
-                          width={40}
-                          height={40}
                           className="w-full h-full object-cover"
-                          unoptimized
                         />
                       ) : (
                         <FileIcon className="h-5 w-5 text-muted-foreground" />
@@ -434,13 +435,10 @@ export default function MediaLibraryPage() {
               {/* Preview */}
               <div className="aspect-square bg-muted rounded-lg flex items-center justify-center overflow-hidden">
                 {isImageMime(selectedFile.mime) ? (
-                  <Image
+                  <img
                     src={getStrapiMediaUrl(selectedFile)}
                     alt={selectedFile.alternativeText || selectedFile.name}
-                    width={400}
-                    height={400}
                     className="w-full h-full object-contain"
-                    unoptimized
                   />
                 ) : (
                   (() => {

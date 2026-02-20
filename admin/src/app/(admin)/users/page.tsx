@@ -13,11 +13,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  fetchAdminUsers,
-  deleteAdminUser,
-  AdminUser,
-} from "@/lib/strapi";
+import { fetchAdminUsers, deleteAdminUser, AdminUser } from "@/lib/strapi";
+import { toast } from "sonner";
 import { Plus, Pencil, Trash2, Loader2, Users, Shield } from "lucide-react";
 import dayjs from "dayjs";
 
@@ -46,25 +43,26 @@ export default function UsersPage() {
   }, [loadUsers]);
 
   const handleDelete = async (user: AdminUser) => {
-    if (
-      !confirm(
-        `ต้องการลบผู้ใช้ "${user.firstname} ${user.lastname}" (${user.email}) หรือไม่?`
-      )
-    )
-      return;
-
-    setDeleting(user.id);
-    try {
-      await deleteAdminUser(user.id);
-      await loadUsers();
-    } catch (error: any) {
-      console.error("Failed to delete user:", error);
-      alert(
-        `ลบไม่สำเร็จ: ${error?.response?.data?.error?.message || error?.message || "Unknown error"}`
-      );
-    } finally {
-      setDeleting(null);
-    }
+    toast(`ลบผู้ใช้ "${user.firstname} ${user.lastname}"?`, {
+      description: `${user.email} — การกระทำนี้ไม่สามารถย้อนกลับได้`,
+      action: {
+        label: "ลบ",
+        onClick: async () => {
+          setDeleting(user.id);
+          try {
+            await deleteAdminUser(user.id);
+            toast.success(`ลบผู้ใช้ "${user.firstname} ${user.lastname}" สำเร็จ`);
+            await loadUsers();
+          } catch (error: any) {
+            console.error("Failed to delete user:", error);
+            toast.error(`ลบไม่สำเร็จ: ${error?.response?.data?.error?.message || error?.message || "Unknown error"}`);
+          } finally {
+            setDeleting(null);
+          }
+        },
+      },
+      cancel: { label: "ยกเลิก", onClick: () => {} },
+    });
   };
 
   return (

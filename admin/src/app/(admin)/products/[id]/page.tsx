@@ -22,6 +22,7 @@ import { MediaPicker } from "@/components/media-picker";
 import { RichTextEditor } from "@/components/rich-text-editor";
 import { SeoEditor, SeoData, emptySeo, parseSeoFromApi, seoToPayload } from "@/components/seo-editor";
 import { ArrowLeft, Save, Loader2 } from "lucide-react";
+import { toast } from "sonner";
 
 interface CategoryOption {
   id: number;
@@ -141,7 +142,6 @@ export default function ProductEditPage() {
     } catch (error: any) {
       console.error("Failed to load product:", error);
       console.error("Error response:", error?.response?.status, error?.response?.data);
-      alert(`ไม่สามารถโหลดข้อมูลสินค้าได้: ${error?.response?.status || "unknown"} - ${JSON.stringify(error?.response?.data?.error?.message || error?.message || "unknown error")}`);
     } finally {
       setLoading(false);
     }
@@ -170,7 +170,7 @@ export default function ProductEditPage() {
     e.preventDefault();
 
     if (!form.name || !form.slug || !form.sku) {
-      alert("กรุณากรอกข้อมูลที่จำเป็น: ชื่อสินค้า, Slug, SKU");
+      toast.error("กรุณากรอกข้อมูลที่จำเป็น: ชื่อสินค้า, Slug, SKU");
       return;
     }
 
@@ -200,16 +200,16 @@ export default function ProductEditPage() {
 
       if (isNew) {
         await createEntry("products", payload);
-        alert("สร้างสินค้าสำเร็จ");
+        toast.success("สร้างสินค้าสำเร็จ");
       } else {
         await updateEntry("products", Number(productId), payload);
-        alert("บันทึกสินค้าสำเร็จ");
+        toast.success("บันทึกสินค้าสำเร็จ");
       }
       router.push("/products");
     } catch (error: any) {
       console.error("Failed to save product:", error);
       const message = error?.response?.data?.error?.message || "ไม่สามารถบันทึกข้อมูลได้";
-      alert(message);
+      toast.error(message);
     } finally {
       setSaving(false);
     }
@@ -220,11 +220,11 @@ export default function ProductEditPage() {
     try {
       const uid = "api::product.product";
       await api.post(`/content-manager/collection-types/${uid}/${productId}/actions/publish`);
-      alert("เผยแพร่สินค้าสำเร็จ");
+      toast.success("เผยแพร่สินค้าสำเร็จ");
       loadProduct();
     } catch (error) {
       console.error("Failed to publish:", error);
-      alert("ไม่สามารถเผยแพร่ได้");
+      toast.error("ไม่สามารถเผยแพร่ได้");
     }
   };
 
@@ -233,11 +233,11 @@ export default function ProductEditPage() {
     try {
       const uid = "api::product.product";
       await api.post(`/content-manager/collection-types/${uid}/${productId}/actions/unpublish`);
-      alert("ยกเลิกเผยแพร่สำเร็จ");
+      toast.success("ยกเลิกเผยแพร่สำเร็จ");
       loadProduct();
     } catch (error) {
       console.error("Failed to unpublish:", error);
-      alert("ไม่สามารถยกเลิกเผยแพร่ได้");
+      toast.error("ไม่สามารถยกเลิกเผยแพร่ได้");
     }
   };
 

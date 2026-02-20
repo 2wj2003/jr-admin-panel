@@ -29,6 +29,7 @@ import {
   Trash2,
 } from "lucide-react";
 import { deleteEntry } from "@/lib/strapi";
+import { toast } from "sonner";
 
 const PAGE_SIZE = 10;
 
@@ -86,18 +87,29 @@ export default function ProductsPage() {
   };
 
   const handleDelete = async (id: number, name: string) => {
-    if (!confirm(`คุณต้องการลบสินค้า "${name}" ใช่หรือไม่?`)) return;
-
-    setDeleting(id);
-    try {
-      await deleteEntry("products", id);
-      loadProducts(pagination.page, search);
-    } catch (error) {
-      console.error("Failed to delete product:", error);
-      alert("ไม่สามารถลบสินค้าได้ กรุณาลองใหม่อีกครั้ง");
-    } finally {
-      setDeleting(null);
-    }
+    toast(`ลบสินค้า "${name}"?`, {
+      description: "การกระทำนี้ไม่สามารถย้อนกลับได้",
+      action: {
+        label: "ลบ",
+        onClick: async () => {
+          setDeleting(id);
+          try {
+            await deleteEntry("products", id);
+            toast.success(`ลบสินค้า "${name}" สำเร็จ`);
+            loadProducts(pagination.page, search);
+          } catch (error) {
+            console.error("Failed to delete product:", error);
+            toast.error("ไม่สามารถลบสินค้าได้ กรุณาลองใหม่อีกครั้ง");
+          } finally {
+            setDeleting(null);
+          }
+        },
+      },
+      cancel: {
+        label: "ยกเลิก",
+        onClick: () => {},
+      },
+    });
   };
 
   const formatPrice = (price: number | null | undefined) => {
