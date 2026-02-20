@@ -10,6 +10,14 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'venuee-static.s3-ap-southeast-1.amazonaws.com',
       },
+      {
+        protocol: 'https',
+        hostname: 'api.jr.co.th',
+      },
+      {
+        protocol: 'http',
+        hostname: 'localhost',
+      },
     ],
   },
 }
