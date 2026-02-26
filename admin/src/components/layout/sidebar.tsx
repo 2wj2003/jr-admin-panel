@@ -17,6 +17,7 @@ import {
   History,
   Settings,
   LogOut,
+  Mail,
 } from "lucide-react";
 import { logout } from "@/lib/auth";
 
@@ -65,6 +66,11 @@ const menuItems = [
     title: "Media Library",
     href: "/media",
     icon: ImagePlus,
+  },
+  {
+    title: "Contacts",
+    href: "/contacts",
+    icon: Mail,
   },
   {
     title: "Users",
