@@ -52,23 +52,26 @@ export function Header() {
   const isFirstLoad = useRef(true);
 
   const loadContactUnread = async () => {
+    if (!localStorage.getItem("admin_token")) return;
     try {
       const result = await fetchCollection("contact-forms", {
         filters: { status: { $eq: "pending" } },
         pagination: { page: 1, pageSize: 1 },
       });
       setContactUnread(result.meta.pagination.total);
-    } catch (error) {
-      console.error("Failed to load contact unread:", error);
+    } catch {
+      // Silently fail - auth redirect handled by interceptor
     }
   };
 
   const loadChatUnread = async () => {
+    if (!localStorage.getItem("admin_token")) return;
     try {
-      const response = await api.get(
-        `/content-manager/collection-types/api::chat-message.chat-message?filters[senderType][$eq]=user&filters[isRead][$eq]=false&pagination[pageSize]=1`
-      );
-      const total = response.data?.pagination?.total ?? 0;
+      const result = await fetchCollection("chat-messages", {
+        filters: { senderType: { $eq: "user" }, isRead: { $eq: false } },
+        pagination: { page: 1, pageSize: 1 },
+      });
+      const total = result.meta.pagination.total;
       setChatUnread(total);
 
       // Play sound if new messages arrived (not on first load)
@@ -77,32 +80,31 @@ export function Header() {
       }
       prevChatUnread.current = total;
       isFirstLoad.current = false;
-    } catch (error) {
-      console.error("Failed to load chat unread:", error);
+    } catch {
+      // Silently fail - auth redirect handled by interceptor
     }
   };
 
   const markChatAsRead = async () => {
-    // Reset badge immediately (optimistic update)
+    if (!localStorage.getItem("admin_token")) return;
     setChatUnread(0);
     prevChatUnread.current = 0;
     try {
-      // Fetch all unread user messages
-      const response = await api.get(
-        `/content-manager/collection-types/api::chat-message.chat-message?filters[senderType][$eq]=user&filters[isRead][$eq]=false&pagination[pageSize]=100`
-      );
-      const results = response.data?.results || response.data?.data || [];
-      // Mark each as read
+      const result = await fetchCollection("chat-messages", {
+        filters: { senderType: { $eq: "user" }, isRead: { $eq: false } },
+        pagination: { page: 1, pageSize: 100 },
+      });
+      const messages = result.data || [];
       await Promise.all(
-        results.map((msg: any) =>
+        messages.map((msg: any) =>
           api.put(
             `/content-manager/collection-types/api::chat-message.chat-message/${msg.id}`,
             { isRead: true }
           )
         )
       );
-    } catch (error) {
-      console.error("Failed to mark chat as read:", error);
+    } catch {
+      // Silently fail
     }
   };
 

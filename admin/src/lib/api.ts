@@ -45,10 +45,13 @@ api.interceptors.response.use(
         const requestUrl = error.config?.url || "";
         const isLoginRequest = requestUrl.includes("/admin/login");
         const isOnLoginPage = window.location.pathname === "/login";
-        const isAdminApiCall = requestUrl.includes("/admin/");
 
-        // Only redirect on 401 from admin API calls (not content API)
-        if (isAdminApiCall && !isLoginRequest && !isOnLoginPage) {
+        // Redirect on 401 from admin or content-manager API calls
+        const isProtectedCall =
+          requestUrl.includes("/admin/") ||
+          requestUrl.includes("/content-manager/");
+
+        if (isProtectedCall && !isLoginRequest && !isOnLoginPage) {
           localStorage.removeItem("admin_token");
           localStorage.removeItem("admin_user");
           window.location.href = "/login";
