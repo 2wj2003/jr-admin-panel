@@ -74,7 +74,7 @@ export default function UsersPage() {
             จัดการผู้ใช้งานระบบ Admin
           </p>
         </div>
-        <Link href="/users/new">
+        <Link href="/users/edit?id=new">
           <Button>
             <Plus className="h-4 w-4 mr-2" />
             เพิ่มผู้ใช้
@@ -166,7 +166,7 @@ export default function UsersPage() {
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex items-center justify-end gap-1">
-                        <Link href={`/users/${user.id}`}>
+                        <Link href={`/users/edit?id=${user.id}`}>
                           <Button variant="ghost" size="sm">
                             <Pencil className="h-4 w-4" />
                           </Button>

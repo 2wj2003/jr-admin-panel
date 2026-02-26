@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
-import { useRouter, useParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,8 +16,8 @@ import { toast } from "sonner";
 
 export default function BrandEditPage() {
   const router = useRouter();
-  const params = useParams();
-  const brandId = params.id as string;
+  const searchParams = useSearchParams();
+  const brandId = searchParams.get("id") || "new";
   const isNew = brandId === "new";
 
   const [loading, setLoading] = useState(!isNew);

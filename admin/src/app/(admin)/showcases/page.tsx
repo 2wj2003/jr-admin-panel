@@ -119,7 +119,7 @@ export default function ShowcasesPage() {
             จัดการผลงานติดตั้งทั้งหมด ({pagination.total} รายการ)
           </p>
         </div>
-        <Link href="/showcases/new">
+        <Link href="/showcases/edit?id=new">
           <Button>
             <Plus className="h-4 w-4 mr-2" />
             เพิ่มผลงาน
@@ -230,7 +230,7 @@ export default function ShowcasesPage() {
                         </TableCell>
                         <TableCell>
                           <div className="flex items-center justify-end gap-2">
-                            <Link href={`/showcases/${showcase.id}`}>
+                            <Link href={`/showcases/edit?id=${showcase.id}`}>
                               <Button variant="ghost" size="sm">
                                 <Edit className="h-4 w-4" />
                               </Button>

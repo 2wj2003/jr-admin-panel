@@ -129,7 +129,7 @@ export default function ProductsPage() {
             จัดการสินค้าทั้งหมดในระบบ ({pagination.total} รายการ)
           </p>
         </div>
-        <Link href="/products/new">
+        <Link href="/products/edit?id=new">
           <Button>
             <Plus className="h-4 w-4 mr-2" />
             เพิ่มสินค้า
@@ -260,7 +260,7 @@ export default function ProductsPage() {
                         </TableCell>
                         <TableCell>
                           <div className="flex items-center justify-end gap-2">
-                            <Link href={`/products/${product.id}`}>
+                            <Link href={`/products/edit?id=${product.id}`}>
                               <Button variant="ghost" size="sm">
                                 <Edit className="h-4 w-4" />
                               </Button>

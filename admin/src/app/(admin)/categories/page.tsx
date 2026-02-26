@@ -112,7 +112,7 @@ export default function CategoriesPage() {
             จัดการหมวดหมู่ทั้งหมดในระบบ ({pagination.total} รายการ)
           </p>
         </div>
-        <Link href="/categories/new">
+        <Link href="/categories/edit?id=new">
           <Button>
             <Plus className="h-4 w-4 mr-2" />
             เพิ่มหมวดหมู่
@@ -210,7 +210,7 @@ export default function CategoriesPage() {
                         </TableCell>
                         <TableCell>
                           <div className="flex items-center justify-end gap-2">
-                            <Link href={`/categories/${cat.id}`}>
+                            <Link href={`/categories/edit?id=${cat.id}`}>
                               <Button variant="ghost" size="sm">
                                 <Edit className="h-4 w-4" />
                               </Button>

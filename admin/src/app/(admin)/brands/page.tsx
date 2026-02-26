@@ -113,7 +113,7 @@ export default function BrandsPage() {
             จัดการแบรนด์ทั้งหมดในระบบ ({pagination.total} รายการ)
           </p>
         </div>
-        <Link href="/brands/new">
+        <Link href="/brands/edit?id=new">
           <Button>
             <Plus className="h-4 w-4 mr-2" />
             เพิ่มแบรนด์
@@ -207,7 +207,7 @@ export default function BrandsPage() {
                         </TableCell>
                         <TableCell>
                           <div className="flex items-center justify-end gap-2">
-                            <Link href={`/brands/${brand.id}`}>
+                            <Link href={`/brands/edit?id=${brand.id}`}>
                               <Button variant="ghost" size="sm">
                                 <Edit className="h-4 w-4" />
                               </Button>

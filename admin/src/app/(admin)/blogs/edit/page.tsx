@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
-import { useRouter, useParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -29,8 +29,8 @@ interface CategoryOption {
 
 export default function BlogEditPage() {
   const router = useRouter();
-  const params = useParams();
-  const blogId = params.id as string;
+  const searchParams = useSearchParams();
+  const blogId = searchParams.get("id") || "new";
   const isNew = blogId === "new";
 
   const [loading, setLoading] = useState(!isNew);

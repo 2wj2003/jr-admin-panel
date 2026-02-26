@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
-import { useRouter, useParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -34,8 +34,8 @@ const TYPE_OPTIONS = [
 
 export default function ShowcaseEditPage() {
   const router = useRouter();
-  const params = useParams();
-  const showcaseId = params.id as string;
+  const searchParams = useSearchParams();
+  const showcaseId = searchParams.get("id") || "new";
   const isNew = showcaseId === "new";
 
   const [loading, setLoading] = useState(!isNew);
