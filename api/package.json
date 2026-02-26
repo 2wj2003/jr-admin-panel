@@ -12,6 +12,7 @@
     "lodash.set": "4.3.2",
     "mime-types": "2.1.27",
     "mysql": "2.18.1",
+    "pg": "^8.11.0",
     "request": "^2.88.2",
     "slugify": "^1.6.5",
     "strapi-bulk-operator": "^0.0.5",
