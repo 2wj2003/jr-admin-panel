@@ -118,7 +118,7 @@ export default function ChatsPage() {
                       <TableCell className="text-right">
                         <Button
                           size="sm"
-                          onClick={() => router.push(`/chats/${attrs.sessionId}`)}
+                          onClick={() => { window.location.href = `/chats/${attrs.sessionId}`; }}
                         >
                           <MessageSquare className="h-4 w-4 mr-1" />
                           เปิดแชท
