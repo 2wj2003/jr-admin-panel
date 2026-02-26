@@ -10,11 +10,11 @@ const getServerSideProps = async () => {
 
   const [categories] = await Promise.all([
     fetcher<CategoryEntityResponseCollection>(categoiesKey).then((c) =>
-      transformToHierarchy(c.data)
-    ),
+      transformToHierarchy(c?.data || [])
+    ).catch(() => []),
   ]);
 
-  return { categories };
+  return { categories: categories || [] };
 };
 
 export default async function Page({

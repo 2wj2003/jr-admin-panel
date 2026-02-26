@@ -23,11 +23,11 @@ export async function generateStaticParams() {
 
   const [categories] = await Promise.all([
     fetcher<CategoryEntityResponseCollection>(categoiesKey).then((c) =>
-      transformToHierarchy(c.data)
-    ),
+      transformToHierarchy(c?.data || [])
+    ).catch(() => []),
   ]);
 
-  return categories.map((c) => ({ slug: c.attributes?.slug }));
+  return (categories || []).map((c) => ({ slug: c.attributes?.slug }));
 }
 
 const getCategories = async (slug?: string) => {
@@ -36,10 +36,12 @@ const getCategories = async (slug?: string) => {
 
   const [category, brands] = await Promise.all([
     fetcher<CategoryEntityResponseCollection>(categoryBySlugKey).then(
-      (c) => c.data[0]
-    ),
-    fetcher<BrandEntityResponseCollection>(brandKey).then((c) => c.data),
+      (c) => c?.data?.[0]
+    ).catch(() => null),
+    fetcher<BrandEntityResponseCollection>(brandKey).then((c) => c?.data || []).catch(() => []),
   ]);
+
+  if (!category) return { categories: [], category: { attributes: {} } as any, brands: [] };
 
   let categories: CategoryEntity[] = [];
 
@@ -126,7 +128,7 @@ export default async function Layout({
             </div>
           )}
 
-          {!!brands.length && (
+          {!!(brands || []).length && (
             <Suspense>
               <BrandFilter brands={brands} />
             </Suspense>

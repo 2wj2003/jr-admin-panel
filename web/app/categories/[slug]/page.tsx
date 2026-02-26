@@ -23,11 +23,11 @@ export async function generateStaticParams() {
 
   const [categories] = await Promise.all([
     fetcher<CategoryEntityResponseCollection>(categoiesKey).then((c) =>
-      transformToHierarchy(c.data)
-    ),
+      transformToHierarchy(c?.data || [])
+    ).catch(() => []),
   ]);
 
-  return categories.map((c) => ({ slug: c.attributes?.slug }));
+  return (categories || []).map((c) => ({ slug: c.attributes?.slug }));
 }
 
 const getServerSideProps = async ({
@@ -50,16 +50,16 @@ const getServerSideProps = async ({
   const categoryBySlugKey = categoryBySlug({ slug: params.slug });
 
   const [products, category] = await Promise.all([
-    fetcher<ProductEntityResponseCollection>(productKey),
+    fetcher<ProductEntityResponseCollection>(productKey).catch(() => ({ data: [], meta: { pagination: { pageCount: 0, page: 1 } } })),
     fetcher<CategoryEntityResponseCollection>(categoryBySlugKey).then(
-      (c) => c.data[0]
-    ),
+      (c) => c?.data?.[0]
+    ).catch(() => null),
   ]);
 
   return {
-    products: products.data || [],
-    meta: products.meta,
-    category,
+    products: products?.data || [],
+    meta: products?.meta,
+    category: category || { attributes: {} } as any,
   };
 };
 
@@ -184,8 +184,8 @@ const getData = async (slug: string) => {
 
   const [category] = await Promise.all([
     fetcher<CategoryEntityResponseCollection>(categoryBySlugKey).then(
-      (c) => c.data[0]
-    ),
+      (c) => c?.data?.[0]
+    ).catch(() => null),
   ]);
 
   return { category };

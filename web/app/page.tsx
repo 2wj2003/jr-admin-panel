@@ -19,12 +19,12 @@ const getData = async () => {
   // const categoriesKey = allCategories();
 
   const [page, brands] = await Promise.all([
-    fetcher<HomepageEntityResponse>(pageKey).then((r) => r.data),
-    fetcher<BrandEntityResponseCollection>(brandKey),
+    fetcher<HomepageEntityResponse>(pageKey).then((r) => r.data).catch(() => null),
+    fetcher<BrandEntityResponseCollection>(brandKey).catch(() => ({ data: [] })),
     // fetcher<CategoryEntityResponseCollection>(categoriesKey)
   ]);
 
-  return { page, brands: brands.data };
+  return { page, brands: brands?.data || [] };
 };
 
 export const revalidate = 60;

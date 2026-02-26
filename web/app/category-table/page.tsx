@@ -40,28 +40,28 @@ export default async function Tree() {
 
   const categoies = await fetcher<CategoryEntityResponseCollection>(
     categoiesKey
-  ).then((c) => c.data?.filter((f) => !f.attributes?.parent?.data));
+  ).then((c) => (c?.data || []).filter((f) => !f.attributes?.parent?.data)).catch(() => []);
 
   return (
     <div className="container mx-auto py-16">
       <div className="flex flex-col gap-4">
-        {categoies.map((v1) => (
+        {(categoies || []).map((v1) => (
           <div key={v1.id}>
             <div>
               level-1: {v1.attributes?.name} - ({v1.attributes?.slug})
             </div>
             <div className="ml-12 flex flex-col gap-4">
-              {v1.attributes?.categories?.data.map((v2) => (
+              {(v1.attributes?.categories?.data || []).map((v2) => (
                 <div key={v2.id}>
                   <div>
                     v2-------{v2.attributes?.name} - ({v2.attributes?.slug})
                   </div>
                   <div className="ml-12 flex flex-col gap-4">
-                    {v2.attributes?.categories?.data.map((v3) => (
+                    {(v2.attributes?.categories?.data || []).map((v3) => (
                       <div key={v3.id}>
                         <div>v3-------{v3.attributes?.name}</div>
                         <div className="ml-12 flex flex-col gap-4">
-                          {v3.attributes?.categories?.data.map((v4) => (
+                          {(v3.attributes?.categories?.data || []).map((v4) => (
                             <div key={v4.id}>
                               <div>v4-------{v4.attributes?.name}</div>
                             </div>
