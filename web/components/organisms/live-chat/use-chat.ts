@@ -27,37 +27,29 @@ export function useChat() {
     initRef.current = true;
 
     const init = async () => {
-      let storedSessionId = localStorage.getItem("chat_session_id");
+      const storedSessionId = localStorage.getItem("chat_session_id");
       const storedUserName = localStorage.getItem("chat_user_name") || "";
-      setUserName(storedUserName);
 
-      if (storedSessionId) {
-        // Check if existing session is still active
+      // Only restore session if we have BOTH sessionId and userName
+      if (storedSessionId && storedUserName) {
         try {
           const session = await getChatSession(storedSessionId);
-          if (!session || session.status === "closed") {
-            // Session not found or closed - clear and start fresh
-            localStorage.removeItem("chat_session_id");
-            localStorage.removeItem("chat_user_name");
-            storedSessionId = null;
-            setUserName("");
+          if (session && session.status === "active") {
+            // Valid active session - restore it
+            setSessionId(storedSessionId);
+            setUserName(storedUserName);
+            return;
           }
         } catch {
-          // If can't fetch, clear stale session and start fresh
-          localStorage.removeItem("chat_session_id");
-          localStorage.removeItem("chat_user_name");
-          storedSessionId = null;
-          setUserName("");
+          // Session not found or error - fall through to clear
         }
       }
 
-      if (!storedSessionId) {
-        storedSessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-        localStorage.setItem("chat_session_id", storedSessionId);
-        await createChatSession({ sessionId: storedSessionId }).catch(console.error);
-      }
-
-      setSessionId(storedSessionId);
+      // Clear any stale data - user will need to enter name and start fresh
+      localStorage.removeItem("chat_session_id");
+      localStorage.removeItem("chat_user_name");
+      setSessionId("");
+      setUserName("");
     };
 
     init();
@@ -134,12 +126,22 @@ export function useChat() {
     createChatSession({ sessionId: newSessionId }).catch(console.error);
   };
 
-  const setName = (name: string) => {
+  const setName = async (name: string) => {
     setUserName(name);
     localStorage.setItem("chat_user_name", name);
-    // Update userName in Strapi session so Admin can see who they're chatting with
-    if (sessionId) {
-      updateChatSession(sessionId, { userName: name }).catch(console.error);
+
+    // Always create a NEW session when user enters their name
+    const newSessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    localStorage.setItem("chat_session_id", newSessionId);
+    setSessionId(newSessionId);
+    setMessages([]);
+    setSessionClosed(false);
+    wasClosedRef.current = false;
+
+    try {
+      await createChatSession({ sessionId: newSessionId, userName: name });
+    } catch (error) {
+      console.error("Failed to create chat session:", error);
     }
   };
 
