@@ -24,14 +24,16 @@ const prompt = Prompt({
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
   subsets: ["thai", "latin"],
   variable: "--font-prompt",
-  // preload: true,
+  display: "swap",
+  fallback: ["system-ui", "arial"],
 });
 
 const sarabun = Sarabun({
   weight: ["100", "200", "300", "400", "500", "600", "700", "800"],
   subsets: ["thai", "latin"],
   variable: "--font-sarabun",
-  // preload: true,
+  display: "swap",
+  fallback: ["system-ui", "arial"],
 });
 
 const getCategories = async () => {
