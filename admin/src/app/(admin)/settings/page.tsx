@@ -103,11 +103,11 @@ export default function SettingsPage() {
             </div>
             <div className="flex justify-between">
               <span className="text-muted-foreground">Database</span>
-              <span className="font-medium">MySQL</span>
+              <span className="font-medium">PostgreSQL</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-muted-foreground">Storage</span>
-              <span className="font-medium">AWS S3</span>
+              <span className="text-muted-foreground">Hosting</span>
+              <span className="font-medium">Railway</span>
             </div>
           </CardContent>
         </Card>

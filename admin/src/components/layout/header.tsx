@@ -25,7 +25,7 @@ function playNotificationSound() {
       oscillator.frequency.setValueAtTime(frequency, startTime);
 
       gainNode.gain.setValueAtTime(0, startTime);
-      gainNode.gain.linearRampToValueAtTime(0.5, startTime + 0.01);
+      gainNode.gain.linearRampToValueAtTime(1, startTime + 0.01);
       gainNode.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
 
       oscillator.start(startTime);

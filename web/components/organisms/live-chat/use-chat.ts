@@ -110,20 +110,16 @@ export function useChat() {
   };
 
   const startNewSession = () => {
-    const newSessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    // Clear state first to stop polling on old session
+    // Clear state - stop polling on old session
     setMessages([]);
     setSessionClosed(false);
     setUserName("");
+    setSessionId("");
     wasClosedRef.current = false;
     initRef.current = false;
-    // Update localStorage
+    // Clear localStorage - user will enter name and setName() will create the session
     localStorage.removeItem("chat_session_id");
     localStorage.removeItem("chat_user_name");
-    localStorage.setItem("chat_session_id", newSessionId);
-    // Set new session and create in backend
-    setSessionId(newSessionId);
-    createChatSession({ sessionId: newSessionId }).catch(console.error);
   };
 
   const setName = async (name: string) => {
