@@ -136,25 +136,22 @@ export default function DashboardPage() {
     else setLoading(true);
 
     try {
-      /* --- stat counts (parallel) --- */
-      const countEndpoints = STAT_DEFS.map((s) => ({
-        key: s.apiKey,
-        url: `/content-manager/collection-types/api::${s.apiKey.replace("-", "-")}.${s.apiKey.replace("chat-sessions", "chat-session").replace("contact-forms", "contact-form").replace("products", "product").replace("blogs", "blog").replace("categories", "category").replace("brands", "brand").replace("showcases", "showcase").replace("provinces", "province")}?page=1&pageSize=1`,
-      }));
+      /* --- stat counts (parallel) - use Public API --- */
+      const countPromises = STAT_DEFS.map(async (s) => {
+        try {
+          const res = await fetchCollection(s.apiKey, { page: 1, pageSize: 1 });
+          return { key: s.apiKey, count: res.meta.pagination.total };
+        } catch {
+          return { key: s.apiKey, count: 0 };
+        }
+      });
 
-      const countResults = await Promise.allSettled(
-        countEndpoints.map((ep) => api.get(ep.url))
-      );
+      const countResults = await Promise.all(countPromises);
 
       setStats((prev) =>
-        prev.map((item, i) => {
-          const r = countResults[i];
-          if (r.status === "fulfilled") {
-            const d = r.value.data;
-            const total = d?.pagination?.total ?? d?.meta?.pagination?.total ?? 0;
-            return { ...item, count: total };
-          }
-          return item;
+        prev.map((item) => {
+          const result = countResults.find((r) => r.key === item.apiKey);
+          return { ...item, count: result?.count ?? 0 };
         })
       );
 
