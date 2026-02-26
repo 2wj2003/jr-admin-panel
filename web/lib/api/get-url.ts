@@ -1,16 +1,16 @@
 export const getApiUrl = () => {
-
-  if (process.env.NODE_ENV === 'production' && process.env.IS_CI !== 'true') {
-    if (typeof window === 'undefined') {
-      // return 'http://api-service.local:3000';
-    } else {
-      return 'https://api.jr.co.th';
-    }
+  // Use environment variable if available
+  if (process.env.NEXT_PUBLIC_API_URL) {
+    return process.env.NEXT_PUBLIC_API_URL;
   }
 
-  return 'http://localhost:1337';
+  // Production fallback
+  if (process.env.NODE_ENV === 'production') {
+    return 'https://api.jr.co.th';
+  }
 
-  // return 'https://api.jr.co.th';
+  // Development fallback
+  return 'http://localhost:1337';
 };
 
 
