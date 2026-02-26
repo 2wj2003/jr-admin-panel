@@ -36,9 +36,9 @@ export async function generateStaticParams() {
 
   const key = `${apiUrl}/api/showcases?${query}`;
 
-  const res = await fetcher<ShowcaseEntityResponseCollection>(key);
+  const res = await fetcher<ShowcaseEntityResponseCollection>(key).catch(() => ({ data: [] }));
 
-  const paths = res.data.map((d) => {
+  const paths = (res?.data || []).map((d) => {
     return {
       slug: d.attributes?.slug
     };

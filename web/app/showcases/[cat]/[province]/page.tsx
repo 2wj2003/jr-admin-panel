@@ -26,23 +26,23 @@ export async function generateStaticParams() {
 
   const key = `${apiUrl}/api/provinces?${query}`;
 
-  const res = await fetcher<ShowcaseEntityResponseCollection>(key);
+  const res = await fetcher<ShowcaseEntityResponseCollection>(key).catch(() => ({ data: [] }));
 
 
-  const cctvs = res.data.map((d) => {
+  const cctvs = (res?.data || []).map((d) => {
     return {
       province: d.attributes?.slug,
       cat: "cctvs",
     };
   });
 
-  const autogate = res.data.map((d) => {
+  const autogate = (res?.data || []).map((d) => {
     return {
       province: d.attributes?.slug,
       cat: "autogate",
     };
   });
-  const solar = res.data.map((d) => {
+  const solar = (res?.data || []).map((d) => {
     return {
       province: d.attributes?.slug,
       cat: "solar-cell",
