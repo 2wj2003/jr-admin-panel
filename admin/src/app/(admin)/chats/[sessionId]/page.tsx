@@ -37,10 +37,21 @@ export default function ChatConversationPage({
 
   const loadSessionInfo = useCallback(async () => {
     try {
-      const response = await api.get(
-        `/content-manager/collection-types/api::chat-session.chat-session?filters[sessionId][$eq]=${params.sessionId}`
-      );
-      const results = response.data?.results || response.data?.data || [];
+      let results: any[] = [];
+      try {
+        const response = await api.get(
+          `/content-manager/collection-types/api::chat-session.chat-session?filters[sessionId][$eq]=${params.sessionId}`
+        );
+        results = response.data?.results || response.data?.data || [];
+      } catch {
+        // Fallback to Public API
+        const response = await api.get(
+          `/api/chat-sessions?filters[sessionId][$eq]=${params.sessionId}`
+        );
+        results = (response.data?.data || []).map((item: any) => ({
+          id: item.id, ...(item.attributes || item)
+        }));
+      }
       if (results.length > 0) {
         const session = results[0];
         const name = session.attributes?.userName ?? session.userName ?? "";
@@ -55,10 +66,21 @@ export default function ChatConversationPage({
 
   const loadMessages = useCallback(async () => {
     try {
-      const response = await api.get(
-        `/content-manager/collection-types/api::chat-message.chat-message?filters[sessionId][$eq]=${params.sessionId}&sort=createdAt:asc&pagination[pageSize]=100`
-      );
-      const results = response.data?.results || response.data?.data || [];
+      let results: any[] = [];
+      try {
+        const response = await api.get(
+          `/content-manager/collection-types/api::chat-message.chat-message?filters[sessionId][$eq]=${params.sessionId}&sort=createdAt:asc&pagination[pageSize]=100`
+        );
+        results = response.data?.results || response.data?.data || [];
+      } catch {
+        // Fallback to Public API
+        const response = await api.get(
+          `/api/chat-messages?filters[sessionId][$eq]=${params.sessionId}&sort=createdAt:asc&pagination[pageSize]=100`
+        );
+        results = (response.data?.data || []).map((item: any) => ({
+          id: item.id, ...(item.attributes || item)
+        }));
+      }
       // Normalize to flat ChatMessage format
       const normalized: ChatMessage[] = results.map((item: any) => ({
         id: item.id,
@@ -90,16 +112,30 @@ export default function ChatConversationPage({
 
   const handleCloseSession = async () => {
     try {
-      const sessionResponse = await api.get(
-        `/content-manager/collection-types/api::chat-session.chat-session?filters[sessionId][$eq]=${params.sessionId}`
-      );
-      const results = sessionResponse.data?.results || sessionResponse.data?.data || [];
-      if (results.length > 0) {
-        const sessionRecordId = results[0].id;
-        await api.put(
-          `/content-manager/collection-types/api::chat-session.chat-session/${sessionRecordId}`,
-          { status: "closed" }
+      let sessionRecordId: number | null = null;
+      try {
+        const sessionResponse = await api.get(
+          `/content-manager/collection-types/api::chat-session.chat-session?filters[sessionId][$eq]=${params.sessionId}`
         );
+        const results = sessionResponse.data?.results || sessionResponse.data?.data || [];
+        if (results.length > 0) {
+          sessionRecordId = results[0].id;
+          await api.put(
+            `/content-manager/collection-types/api::chat-session.chat-session/${sessionRecordId}`,
+            { status: "closed" }
+          );
+        }
+      } catch {
+        // Fallback to Public API
+        const sessionResponse = await api.get(
+          `/api/chat-sessions?filters[sessionId][$eq]=${params.sessionId}`
+        );
+        const items = sessionResponse.data?.data || [];
+        if (items.length > 0) {
+          await api.put(`/api/chat-sessions/${items[0].id}`, {
+            data: { status: "closed" },
+          });
+        }
       }
       setSessionClosed(true);
       toast.success("ปิดการสนทนาแล้ว");
@@ -115,17 +151,29 @@ export default function ChatConversationPage({
     setSending(true);
     try {
       // Send message via Content Manager API (uses Admin JWT)
-      await api.post(
-        "/content-manager/collection-types/api::chat-message.chat-message",
-        {
-          message: inputMessage.trim(),
-          sender: "Admin",
-          senderType: "admin",
-          sessionId: params.sessionId,
-        }
-      );
+      try {
+        await api.post(
+          "/content-manager/collection-types/api::chat-message.chat-message",
+          {
+            message: inputMessage.trim(),
+            sender: "Admin",
+            senderType: "admin",
+            sessionId: params.sessionId,
+          }
+        );
+      } catch {
+        // Fallback to Public API
+        await api.post("/api/chat-messages", {
+          data: {
+            message: inputMessage.trim(),
+            sender: "Admin",
+            senderType: "admin",
+            sessionId: params.sessionId,
+          },
+        });
+      }
 
-      // Update session lastMessageAt via Content Manager API
+      // Update session lastMessageAt
       try {
         const sessionResponse = await api.get(
           `/content-manager/collection-types/api::chat-session.chat-session?filters[sessionId][$eq]=${params.sessionId}`
@@ -138,8 +186,21 @@ export default function ChatConversationPage({
             { lastMessageAt: new Date().toISOString() }
           );
         }
-      } catch (updateError) {
-        console.error("Failed to update session:", updateError);
+      } catch {
+        // Fallback: update via Public API
+        try {
+          const sessionResponse = await api.get(
+            `/api/chat-sessions?filters[sessionId][$eq]=${params.sessionId}`
+          );
+          const items = sessionResponse.data?.data || [];
+          if (items.length > 0) {
+            await api.put(`/api/chat-sessions/${items[0].id}`, {
+              data: { lastMessageAt: new Date().toISOString() },
+            });
+          }
+        } catch (e2) {
+          console.error("Failed to update session:", e2);
+        }
       }
 
       setInputMessage("");

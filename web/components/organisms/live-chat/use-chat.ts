@@ -35,15 +35,19 @@ export function useChat() {
         // Check if existing session is still active
         try {
           const session = await getChatSession(storedSessionId);
-          if (session && session.status === "closed") {
-            // Session was closed by admin - clear and start fresh
+          if (!session || session.status === "closed") {
+            // Session not found or closed - clear and start fresh
             localStorage.removeItem("chat_session_id");
             localStorage.removeItem("chat_user_name");
             storedSessionId = null;
             setUserName("");
           }
         } catch {
-          // If can't fetch, keep using stored session
+          // If can't fetch, clear stale session and start fresh
+          localStorage.removeItem("chat_session_id");
+          localStorage.removeItem("chat_user_name");
+          storedSessionId = null;
+          setUserName("");
         }
       }
 
