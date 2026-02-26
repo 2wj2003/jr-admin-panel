@@ -35,6 +35,7 @@
     "dev": "strapi develop --no-build",
     "start": "strapi start",
     "build": "strapi build",
+    "postinstall": "strapi build",
     "strapi": "strapi"
   },
   "devDependencies": {},
