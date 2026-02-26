@@ -53,9 +53,9 @@ const getData = async () => {
   );
 
   const [cctvs, atgs, solars] = await Promise.all([
-    fetcher<ShowcaseEntityResponseCollection>(cctvsKey).then((r) => r.data),
-    fetcher<ShowcaseEntityResponseCollection>(atgKey).then((r) => r.data),
-    fetcher<ShowcaseEntityResponseCollection>(solarJKey).then((r) => r.data),
+    fetcher<ShowcaseEntityResponseCollection>(cctvsKey).then((r) => r.data || []).catch(() => []),
+    fetcher<ShowcaseEntityResponseCollection>(atgKey).then((r) => r.data || []).catch(() => []),
+    fetcher<ShowcaseEntityResponseCollection>(solarJKey).then((r) => r.data || []).catch(() => []),
   ]);
 
   return {
@@ -107,7 +107,7 @@ const Showcase = async () => {
             </Link>
           ))}
         </div>
-        {!!cctvs.length && (
+        {!!(cctvs || []).length && (
           <>
             <h2 className="mt-4 mb-4 text-2xl font-medium text-slate-900">
               กล้องวงจรปิด
@@ -125,7 +125,7 @@ const Showcase = async () => {
             </Link>
           </>
         )}
-        {!!atgs.length && (
+        {!!(atgs || []).length && (
           <>
             <h2 className="mt-4 mb-4 text-2xl font-medium text-slate-900">
               ประตูอัตโนมัติ
@@ -143,7 +143,7 @@ const Showcase = async () => {
             </Link>
           </>
         )}
-        {!!solars.length && (
+        {!!(solars || []).length && (
           <>
             <h2 className="mt-4 mb-4 text-2xl font-medium text-slate-900">
               โซล่าเซลล์
