@@ -70,9 +70,9 @@ export const revalidate = 60;
 export async function generateStaticParams() {
   const key = allProducts();
 
-  const res = await fetcher<ProductEntityResponseCollection>(key);
+  const res = await fetcher<ProductEntityResponseCollection>(key).catch(() => ({ data: [] }));
 
-  const paths = res.data?.map((d) => {
+  const paths = (res?.data || []).map((d) => {
     return {
       slug: d.attributes?.slug,
     };

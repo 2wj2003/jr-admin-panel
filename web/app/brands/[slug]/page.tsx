@@ -26,9 +26,9 @@ export async function generateStaticParams() {
 
   const key = `${apiUrl}/api/brands?${query}`;
 
-  const res = await fetcher<BrandEntityResponseCollection>(key);
+  const res = await fetcher<BrandEntityResponseCollection>(key).catch(() => ({ data: [] }));
 
-  const paths = res.data.map((d) => {
+  const paths = (res?.data || []).map((d) => {
     return {
       slug: d.attributes?.slug,
     };
@@ -107,7 +107,7 @@ const Home = async ({ params }: { params: { slug: string } }) => {
           {brand?.attributes?.seo?.metaTitle || brand?.attributes?.name}
         </h1>
         <ul className="grid grid-cols-2 md:grid-cols-4 gap-2 my-8 list-none">
-          {brand?.attributes?.products?.data.map((p) => (
+          {(brand?.attributes?.products?.data || []).map((p) => (
             <li key={p.id} className="col-span-1">
               <Link href={`/products/${p.attributes?.slug}`}>
                 <ProductCard

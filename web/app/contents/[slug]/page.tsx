@@ -17,9 +17,9 @@ import { Metadata } from "next";
 export async function generateStaticParams() {
   const key = allPage();
 
-  const res = await fetcher<PageEntityResponseCollection>(key);
+  const res = await fetcher<PageEntityResponseCollection>(key).catch(() => ({ data: [] }));
 
-  const paths = res.data.map((d) => {
+  const paths = (res?.data || []).map((d) => {
     return {
       slug: d.attributes?.slug,
     };
