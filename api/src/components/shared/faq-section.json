@@ -1,0 +1,24 @@
+{
+  "collectionName": "components_shared_faq_sections",
+  "info": {
+    "displayName": "faqSection",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "items": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.faq"
+    },
+    "bgColor": {
+      "type": "enumeration",
+      "enum": [
+        "white",
+        "primary",
+        "gray"
+      ],
+      "default": "gray"
+    }
+  }
+}

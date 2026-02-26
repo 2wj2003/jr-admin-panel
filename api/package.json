@@ -1,0 +1,53 @@
+{
+  "dependencies": {
+    "@_sh/strapi-plugin-ckeditor": "1.1.3",
+    "@strapi/plugin-graphql": "4.10.7",
+    "@strapi/plugin-i18n": "4.10.7",
+    "@strapi/plugin-seo": "1.8.0",
+    "@strapi/plugin-users-permissions": "4.10.7",
+    "@strapi/provider-email-sendgrid": "4.10.7",
+    "@strapi/provider-upload-aws-s3": "4.10.7",
+    "@strapi/strapi": "4.10.7",
+    "better-sqlite3": "7.4.6",
+    "lodash.set": "4.3.2",
+    "mime-types": "2.1.27",
+    "mysql": "2.18.1",
+    "request": "^2.88.2",
+    "slugify": "^1.6.5",
+    "strapi-bulk-operator": "^0.0.5",
+    "strapi-plugin-config-sync": "1.1.1",
+    "strapi-plugin-ezforms": "0.1.5",
+    "strapi-plugin-fuzzy-search": "^1.11.0-beta.1",
+    "strapi-plugin-import-export-entries": "1.18.0",
+    "strapi-plugin-meilisearch": "0.9.1",
+    "strapi-plugin-menus": "1.3.1",
+    "strapi-plugin-populate-deep": "2.0.0",
+    "strapi-plugin-preview-button": "1.1.2",
+    "strapi-plugin-sitemap": "2.0.9",
+    "xlsx": "^0.18.5"
+  },
+  "name": "backend",
+  "private": true,
+  "version": "0.1.0",
+  "description": "A Strapi application",
+  "scripts": {
+    "dev": "strapi develop --no-build",
+    "start": "strapi start",
+    "build": "strapi build",
+    "strapi": "strapi"
+  },
+  "devDependencies": {},
+  "author": {
+    "name": "A Strapi developer"
+  },
+  "strapi": {
+    "uuid": "e4199ba4-a804-434f-9491-682e86b84acd",
+    "template": "@strapi/template-blog@1.0.0",
+    "starter": "@strapi/starter-next-blog"
+  },
+  "engines": {
+    "node": ">=12.x.x <=16.x.x",
+    "npm": ">=6.0.0"
+  },
+  "license": "MIT"
+}

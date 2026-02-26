@@ -1,0 +1,37 @@
+{
+  "collectionName": "components_shared_cta_features",
+  "info": {
+    "displayName": "CTAFeature",
+    "icon": "ad",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "preTitle": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string",
+      "required": false
+    },
+    "description": {
+      "type": "richtext"
+    },
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images", "videos"]
+    },
+    "imagePosition": {
+      "type": "enumeration",
+      "enum": ["LEFT", "RIGHT"],
+      "default": "RIGHT"
+    },
+    "ctas": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.button"
+    }
+  }
+}

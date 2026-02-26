@@ -1,0 +1,14 @@
+# *
+User-agent: *
+Allow: /
+
+# AhrefsBot
+User-agent: AhrefsBot
+Allow: /category-table
+
+# Host
+Host: https://www.jr.co.th
+
+# Sitemaps
+Sitemap: https://www.jr.co.th/sitemap.xml
+Sitemap: https://www.jr.co.th/categories.xml

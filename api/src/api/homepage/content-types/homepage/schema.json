@@ -1,0 +1,50 @@
+{
+  "kind": "singleType",
+  "collectionName": "homepages",
+  "info": {
+    "singularName": "homepage",
+    "pluralName": "homepages",
+    "displayName": "Homepage",
+    "name": "homepage",
+    "description": ""
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "seo": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.seo"
+    },
+    "blocks": {
+      "type": "dynamiczone",
+      "components": [
+        "shared.button",
+        "shared.carousel",
+        "shared.countdown-banner",
+        "shared.cta-feature",
+        "shared.grid",
+        "shared.hero-form",
+        "shared.rich-text",
+        "shared.section",
+        "shared.testimonial",
+        "shared.faq-section",
+        "shared.timeline",
+        "shared.feature-section"
+      ]
+    },
+    "heroCarousel": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.banner"
+    },
+    "heroMenus": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.banner"
+    }
+  }
+}

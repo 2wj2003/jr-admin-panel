@@ -1,0 +1,79 @@
+query getBlogBySlug($slug: String, $publicationState: PublicationState = LIVE) {
+  blogs(filters: { slug: { eq: $slug } }, publicationState: $publicationState) {
+    data {
+      id
+      attributes {
+        slug
+        title
+        category {
+          data {
+            id
+            attributes {
+              slug
+              name
+              parent {
+                data {
+                  id
+                  attributes {
+                    name
+                    slug
+                  }
+                }
+              }
+            }
+          }
+        }
+        coverImage {
+          data {
+            id
+            attributes {
+              size
+              name
+              url
+              caption
+              alternativeText
+            }
+          }
+        }
+        blocks {
+          ... on ComponentSharedRichText {
+            __typename
+            id
+            body
+          }
+          ... on ComponentSharedProductCarousel {
+            __typename
+            id
+            title
+            description
+            products {
+              data {
+                id
+                attributes {
+                  slug
+                  sku
+                  name
+                  instalment
+                  originalPrice
+                  discountPrice
+                  coverImage {
+                    data {
+                      id
+                      attributes {
+                        size
+                        name
+                        url
+                        caption
+                        alternativeText
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

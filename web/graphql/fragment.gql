@@ -1,0 +1,50 @@
+fragment CtaFeature on ComponentSharedCtaFeature {
+  __typename
+  id
+  title
+  description
+  cta_link
+  cta_text
+}
+
+fragment ImageAttributes on UploadFile {
+  size
+  name
+  url
+  caption
+  alternativeText
+  width
+  height
+}
+
+fragment ProductAttributes on Product {
+  slug
+  sku
+  name
+  instalment
+  originalPrice
+  discountPrice
+}
+
+fragment ProductCarousel on ComponentSharedProductCarousel {
+  __typename
+  id
+  title
+  description
+  products {
+    data {
+      id
+      attributes {
+        ...ProductAttributes
+        coverImage {
+          data {
+            id
+            attributes {
+              ...ImageAttributes
+            }
+          }
+        }
+      }
+    }
+  }
+}

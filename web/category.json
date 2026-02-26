@@ -1,0 +1,182 @@
+[
+  {
+    "id": 1,
+    "name": "cctv",
+    "slug": "cctv",
+    "parent": null
+  },
+  {
+    "id": 2,
+    "name": "autogate",
+    "slug": "autogate",
+    "parent": null
+  },
+  {
+    "id": 3,
+    "name": "solar-cell",
+    "slug": "solar-cell",
+    "parent": null
+  },
+  {
+    "id": 4,
+    "name": "ev-charger",
+    "slug": "ev-charger",
+    "parent": null
+  },
+  {
+    "id": 5,
+    "name": "ip-camera-cctv",
+    "slug": "ip-camera-cctv",
+    "parent": 1
+  },
+  {
+    "id": 6,
+    "name": "lpr-license-plate-recognition-camera",
+    "slug": "lpr-license-plate-recognition-camera",
+
+    "parent": 5
+  },
+  {
+    "id": 7,
+    "name": "wireless-camera",
+    "slug": "wireless-camera",
+
+    "parent": 1
+  },
+  {
+    "id": 8,
+    "name": "dome-camera-cctv",
+    "slug": "dome-camera-cctv",
+
+    "parent": 7
+  },
+  {
+    "id": 9,
+    "name": "bullet-camera-cctv",
+    "slug": "bullet-camera-cctv",
+
+    "parent": 7
+  },
+  {
+    "id": 10,
+    "name": "solar-camera-cctv",
+    "slug": "solar-camera-cctv",
+
+    "parent": 7
+  },
+  {
+    "id": 11,
+    "name": "4g-sim-card-camera-cctv",
+    "slug": "4g-sim-card-camera-cctv",
+
+    "parent": 7
+  },
+  {
+    "id": 12,
+    "name": "analog-camera-cctv",
+    "slug": "analog-camera-cctv",
+
+    "parent": 1
+  },
+  {
+    "id": 13,
+    "name": "cctv-accessories",
+    "slug": "cctv-accessories",
+    "parent": 1
+  },
+  {
+    "id": 14,
+    "name": "video-recorders",
+    "slug": "video-recorders",
+
+    "parent": 13
+  },
+  {
+    "id": 15,
+    "name": "nvr-network-video-recorders",
+    "slug": "nvr-network-video-recorders",
+
+    "parent": 14
+  },
+  {
+    "id": 16,
+    "name": "dvr-digital-video-recorders",
+    "slug": "dvr-digital-video-recorders",
+
+    "parent": 14
+  },
+  {
+    "id": 17,
+    "name": "cable",
+    "slug": "cable",
+
+    "parent": 13
+  },
+  {
+    "id": 18,
+    "name": "rg6-cable",
+    "slug": "rg6-cable",
+
+    "parent": 17
+  },
+  {
+    "id": 18,
+    "name": "utp-cable",
+    "slug": "utp-cable",
+    "parent": 17
+  },
+  {
+    "id": 19,
+    "name": "video-storage",
+    "slug": "video-storage",
+    "parent": 13
+  },
+  {
+    "id": 20,
+    "name": "harddisk-internal-hdd",
+    "slug": "harddisk-internal-hdd",
+    "parent": 19
+  },
+  {
+    "id": 21,
+    "name": "solid-state-drive-internal-ssd",
+    "slug": "solid-state-drive-internal-ssd",
+    "parent": 19
+  },
+  {
+    "id": 22,
+    "name": "power-supply",
+    "slug": "power-supply",
+    "parent": 13
+  },
+  {
+    "id": 23,
+    "name": "digital-door-lock",
+    "slug": "digital-door-lock",
+    "parent": 2
+  },
+  {
+    "id": 24,
+    "name": "sliding-auto-gate",
+    "slug": "sliding-auto-gate",
+    "parent": 2
+  },
+  {
+    "id": 25,
+    "name": "swing-auto-gate",
+    "slug": "swing-auto-gate",
+    "parent": 2
+  },
+  {
+    "id": 26,
+    "name": "hybrid-solar-cell",
+    "slug": "hybrid-solar-cell",
+    "parent": 3
+  },
+  {
+    "id": 27,
+    "name": "ongrid-solar-cell",
+    "slug": "ongrid-solar-cell",
+    "parent": 3
+  }
+]

@@ -76,6 +76,9 @@ const COLLECTION_UIDS: Record<string, string> = {
   pages: "api::page.page",
   showcases: "api::showcase.showcase",
   provinces: "api::province.province",
+  "contact-forms": "api::contact-form.contact-form",
+  "chat-messages": "api::chat-message.chat-message",
+  "chat-sessions": "api::chat-session.chat-session",
 };
 
 // Use Content Manager API (admin-authenticated)
@@ -84,26 +87,39 @@ export async function fetchCollection(
   params?: Record<string, any>
 ): Promise<{ data: StrapiEntity[]; meta: StrapiMeta }> {
   const uid = COLLECTION_UIDS[endpoint] || endpoint;
-  const searchParams = new URLSearchParams();
 
+  const flatParams: Record<string, string> = {};
   if (params) {
-    Object.entries(params).forEach(([key, value]) => {
-      if (value !== undefined && value !== null && value !== "") {
-        searchParams.set(key, String(value));
-      }
-    });
+    const flatten = (obj: any, prefix = "") => {
+      Object.entries(obj).forEach(([key, value]) => {
+        const fullKey = prefix ? `${prefix}[${key}]` : key;
+        if (value !== undefined && value !== null && value !== "") {
+          if (typeof value === "object" && !Array.isArray(value)) {
+            flatten(value, fullKey);
+          } else if (Array.isArray(value)) {
+            value.forEach((v, i) => {
+              if (typeof v === "object") flatten(v, `${fullKey}[${i}]`);
+              else flatParams[`${fullKey}[${i}]`] = String(v);
+            });
+          } else {
+            flatParams[fullKey] = String(value);
+          }
+        }
+      });
+    };
+    flatten(params);
   }
 
-  const query = searchParams.toString();
+  const query = new URLSearchParams(flatParams).toString();
   const url = `/content-manager/collection-types/${uid}${query ? `?${query}` : ""}`;
-  
-  // Try Content Manager API first, fallback to Public API
+
+  // Try Content Manager API first, fallback to Public API with token
   let response;
   try {
     response = await api.get(url);
   } catch (error) {
-    // Fallback to Public API
-    const publicUrl = `/${endpoint}${query ? `?${query}` : ""}`;
+    // Fallback to /api/[endpoint] - token will be sent via interceptor
+    const publicUrl = `/api/${endpoint}${query ? `?${query}` : ""}`;
     response = await api.get(publicUrl);
   }
 

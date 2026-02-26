@@ -1,0 +1,23 @@
+{
+  "collectionName": "components_shared_feature_sections",
+  "info": {
+    "displayName": "FeatureSection",
+    "icon": "align-right",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "richtext"
+    },
+    "features": {
+      "displayName": "feature",
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.feature"
+    }
+  }
+}

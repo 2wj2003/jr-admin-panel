@@ -1,0 +1,88 @@
+#import './fragment.gql'
+
+query getProductBySlug(
+  $slug: String
+  $publicationState: PublicationState = LIVE
+) {
+  products(
+    filters: { slug: { eq: $slug } }
+    publicationState: $publicationState
+  ) {
+    data {
+      id
+      attributes {
+        sku
+        slug
+        instalment
+        name
+        description
+        keyFeature
+        originalPrice
+        discountPrice
+        warrantyDuration
+        warrantyDurationUnit
+        warrantyDescription
+        specification
+        files {
+          data {
+            id
+            attributes {
+              size
+              name
+              url
+              caption
+              alternativeText
+            }
+          }
+        }
+        medias {
+          data {
+            id
+            attributes {
+              size
+              name
+              url
+              caption
+              alternativeText
+            }
+          }
+        }
+        brands {
+          data {
+            id
+            attributes {
+              name
+              slug
+              logo {
+                data {
+                  id
+                  attributes {
+                    url
+                  }
+                }
+              }
+            }
+          }
+        }
+        category {
+          data {
+            id
+            attributes {
+              slug
+              name
+              parent {
+                data {
+                  id
+                  attributes {
+                    name
+                    slug
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

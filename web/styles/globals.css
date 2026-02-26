@@ -1,0 +1,68 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body {
+  @apply font-sans antialiased p-0 m-0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.first-child-margin-left-4:nth-child(1) {
+  @apply ml-4 md:ml-0;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.ais-Pagination-item--selected .ais-Pagination-link {
+  @apply text-white bg-primary border-primary;
+}
+
+.prose {
+  @apply font-body;
+}
+
+.prose.love-marker li::marker {
+  content: "😍";
+}
+
+.pagination {
+  @apply flex flex-row gap-2 items-center justify-center my-12;
+}
+
+.pagination .page-number {
+  padding: 10px 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.5s ease;
+
+  @apply text-primary-500 bg-slate-100;
+}
+
+.pagination .page-number:hover {
+  @apply bg-primary-500 text-white;
+}
+
+.pagination .active {
+  @apply bg-primary-500 text-white;
+}
+
+.pagination .active:hover {
+  @apply text-primary-500 bg-white;
+}

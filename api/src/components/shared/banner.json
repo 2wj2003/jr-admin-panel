@@ -1,0 +1,36 @@
+{
+  "collectionName": "components_shared_banners",
+  "info": {
+    "displayName": "banner",
+    "icon": "arrow-circle-down",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "image": {
+      "type": "media",
+      "multiple": false,
+      "required": true,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "link": {
+      "type": "string",
+      "required": false
+    },
+    "target": {
+      "type": "enumeration",
+      "enum": [
+        "_blank",
+        "_parent",
+        "_self",
+        "_top"
+      ],
+      "default": "_blank"
+    },
+    "tagId": {
+      "type": "string"
+    }
+  }
+}

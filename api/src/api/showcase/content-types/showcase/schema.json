@@ -1,0 +1,67 @@
+{
+  "kind": "collectionType",
+  "collectionName": "showcases",
+  "info": {
+    "singularName": "showcase",
+    "pluralName": "showcases",
+    "displayName": "Showcase",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "slug": {
+      "type": "string",
+      "unique": true,
+      "required": true,
+      "maxLength": 250,
+      "regex": "^[ก-๙a-z0-9]+(?:-[ก-๙a-z0-9]+)*$"
+    },
+    "seo": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.seo"
+    },
+    "cover": {
+      "type": "media",
+      "multiple": false,
+      "required": true,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "images": {
+      "type": "media",
+      "multiple": true,
+      "required": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "province": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::province.province",
+      "inversedBy": "showcases"
+    },
+    "type": {
+      "type": "enumeration",
+      "enum": [
+        "CCTV",
+        "SOLAR",
+        "ATG"
+      ],
+      "required": true,
+      "default": "CCTV"
+    },
+    "description": {
+      "type": "richtext"
+    }
+  }
+}

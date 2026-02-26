@@ -1,0 +1,66 @@
+{
+  "collectionName": "components_shared_carousels",
+  "info": {
+    "displayName": "carousel",
+    "icon": "angle-double-right",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "type": {
+      "type": "enumeration",
+      "enum": [
+        "products",
+        "blogs",
+        "showcases",
+        "testimonials",
+        "banners"
+      ],
+      "default": "products"
+    },
+    "bgColor": {
+      "type": "enumeration",
+      "enum": [
+        "primary",
+        "yellow",
+        "white"
+      ],
+      "default": "white"
+    },
+    "showMore": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.button"
+    },
+    "products": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::product.product"
+    },
+    "blogs": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::blog.blog"
+    },
+    "showcases": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::showcase.showcase"
+    },
+    "testimonials": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.testimonial"
+    },
+    "banners": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.banner"
+    },
+    "banner": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.banner"
+    }
+  }
+}

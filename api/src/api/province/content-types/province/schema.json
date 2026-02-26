@@ -1,0 +1,39 @@
+{
+  "kind": "collectionType",
+  "collectionName": "provinces",
+  "info": {
+    "singularName": "province",
+    "pluralName": "provinces",
+    "displayName": "Province",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name_th": {
+      "type": "string"
+    },
+    "name_en": {
+      "type": "string"
+    },
+    "slug": {
+      "type": "uid",
+      "required": true,
+      "maxLength": 250,
+      "regex": "^[ก-๙a-z0-9]+(?:-[ก-๙a-z0-9]+)*$"
+    },
+    "showcases": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::showcase.showcase",
+      "mappedBy": "province"
+    },
+    "seo": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.seo"
+    }
+  }
+}

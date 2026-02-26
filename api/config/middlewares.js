@@ -1,0 +1,55 @@
+module.exports = ({ env }) => [
+  "strapi::errors",
+  "strapi::cors",
+  "strapi::poweredBy",
+  "strapi::logger",
+  "strapi::query",
+  {
+    name: "strapi::body",
+    config: {
+      jsonLimit: "10mb",
+      formLimit: "10mb",
+      textLimit: "10mb",
+      encoding: "utf-8",
+    },
+  },
+  "strapi::session",
+  "strapi::favicon",
+  "strapi::public",
+  {
+    name: "strapi::security",
+    config: {
+      contentSecurityPolicy: {
+        useDefaults: true,
+        directives: {
+          "connect-src": ["'self'", "https:"],
+          "script-src": [
+            "'self'",
+            "blob:",
+            "'unsafe-inline'",
+            "cdn.jsdelivr.net",
+            "dl.airtable.com",
+            "admin.jr.co.th",
+            "api.jr.co.th",
+            "www.jr.co.th",
+          ],
+          "frame-src": ["*"],
+          "img-src": [
+            "'self'",
+            "data:",
+            "blob:",
+            "cdn.jsdelivr.net",
+            "strapi.io",
+            "dl.airtable.com",
+            "s3.ap-southeast-1.amazonaws.com",
+            "jr.co.th.s3.ap-southeast-1.amazonaws.com",
+            "admin.jr.co.th",
+            "api.jr.co.th",
+            "www.jr.co.th",
+          ],
+          upgradeInsecureRequests: null,
+        },
+      },
+    },
+  },
+];

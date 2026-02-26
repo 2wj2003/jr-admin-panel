@@ -2,6 +2,12 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -80,7 +86,7 @@ export default function ContactsPage() {
       });
 
       setContacts(result.data);
-      setPagination(result.pagination);
+      setPagination(result.meta.pagination);
     } catch (error) {
       console.error("Failed to load contacts:", error);
       toast.error("ไม่สามารถโหลดข้อมูลติดต่อได้");
@@ -137,11 +143,11 @@ export default function ContactsPage() {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "pending":
-        return <Badge variant="secondary">รอดำเนินการ</Badge>;
+        return <Badge className="bg-yellow-100 text-yellow-800 hover:bg-yellow-100">รอดำเนินการ</Badge>;
       case "read":
-        return <Badge variant="outline">อ่านแล้ว</Badge>;
+        return <Badge className="bg-green-100 text-green-800 hover:bg-green-100">อ่านแล้ว</Badge>;
       case "replied":
-        return <Badge>ตอบกลับแล้ว</Badge>;
+        return <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-100">ตอบกลับแล้ว</Badge>;
       default:
         return <Badge variant="secondary">{status}</Badge>;
     }
@@ -249,7 +255,7 @@ export default function ContactsPage() {
                             <Button
                               size="sm"
                               variant="outline"
-                              onClick={() => setSelectedContact({ id: contact.id, ...attrs })}
+                              onClick={() => setSelectedContact({ id: contact.id, ...attrs } as ContactForm)}
                             >
                               <Eye className="h-4 w-4 mr-1" />
                               ดู
@@ -312,95 +318,104 @@ export default function ContactsPage() {
         </CardContent>
       </Card>
 
-      {selectedContact && (
-        <Card>
-          <CardHeader>
-            <CardTitle>รายละเอียดข้อความ</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="text-sm font-medium text-muted-foreground">
-                  ชื่อ
-                </label>
-                <p className="mt-1">{selectedContact.name}</p>
-              </div>
-              <div>
-                <label className="text-sm font-medium text-muted-foreground">
-                  อีเมล
-                </label>
-                <p className="mt-1">
-                  <a
-                    href={`mailto:${selectedContact.email}`}
-                    className="text-blue-600 hover:underline"
-                  >
-                    {selectedContact.email}
-                  </a>
-                </p>
-              </div>
-              {selectedContact.phone && (
-                <div>
-                  <label className="text-sm font-medium text-muted-foreground">
-                    เบอร์โทร
-                  </label>
-                  <p className="mt-1">
-                    <a
-                      href={`tel:${selectedContact.phone}`}
-                      className="text-blue-600 hover:underline"
-                    >
-                      {selectedContact.phone}
+      <Dialog open={!!selectedContact} onOpenChange={(open) => { if (!open) setSelectedContact(null); }}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Mail className="h-5 w-5" />
+              รายละเอียดข้อความ
+            </DialogTitle>
+          </DialogHeader>
+          {selectedContact && (
+            <div className="space-y-5">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-1">
+                  <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">ชื่อ</p>
+                  <div className="flex items-center gap-2">
+                    <User className="h-4 w-4 text-muted-foreground" />
+                    <p className="font-medium">{selectedContact.name}</p>
+                  </div>
+                </div>
+                <div className="space-y-1">
+                  <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">อีเมล</p>
+                  <div className="flex items-center gap-2">
+                    <Mail className="h-4 w-4 text-muted-foreground" />
+                    <a href={`mailto:${selectedContact.email}`} className="text-blue-600 hover:underline text-sm">
+                      {selectedContact.email}
                     </a>
-                  </p>
+                  </div>
+                </div>
+                {selectedContact.phone && (
+                  <div className="space-y-1">
+                    <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">เบอร์โทร</p>
+                    <div className="flex items-center gap-2">
+                      <Phone className="h-4 w-4 text-muted-foreground" />
+                      <a href={`tel:${selectedContact.phone}`} className="text-blue-600 hover:underline text-sm">
+                        {selectedContact.phone}
+                      </a>
+                    </div>
+                  </div>
+                )}
+                {selectedContact.subject && (
+                  <div className="space-y-1">
+                    <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">หัวข้อ</p>
+                    <p className="font-medium">{selectedContact.subject}</p>
+                  </div>
+                )}
+                <div className="space-y-1">
+                  <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">วันที่</p>
+                  <p className="text-sm">{dayjs(selectedContact.createdAt).format("DD/MM/YYYY HH:mm")}</p>
+                </div>
+                <div className="space-y-1">
+                  <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">สถานะ</p>
+                  <div>{getStatusBadge(selectedContact.status)}</div>
+                </div>
+              </div>
+
+              <div className="space-y-1">
+                <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">ข้อความ</p>
+                <div className="p-4 bg-muted rounded-lg whitespace-pre-wrap text-sm leading-relaxed">
+                  {selectedContact.message}
+                </div>
+              </div>
+
+              {selectedContact.ipAddress && (
+                <div className="space-y-1">
+                  <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">IP Address</p>
+                  <p className="text-sm text-muted-foreground font-mono">{selectedContact.ipAddress}</p>
                 </div>
               )}
-              {selectedContact.subject && (
-                <div>
-                  <label className="text-sm font-medium text-muted-foreground">
-                    หัวข้อ
-                  </label>
-                  <p className="mt-1">{selectedContact.subject}</p>
-                </div>
-              )}
-              <div>
-                <label className="text-sm font-medium text-muted-foreground">
-                  วันที่
-                </label>
-                <p className="mt-1">
-                  {dayjs(selectedContact.createdAt).format("DD/MM/YYYY HH:mm")}
-                </p>
-              </div>
-              <div>
-                <label className="text-sm font-medium text-muted-foreground">
-                  สถานะ
-                </label>
-                <p className="mt-1">{getStatusBadge(selectedContact.status)}</p>
-              </div>
-            </div>
-            <div>
-              <label className="text-sm font-medium text-muted-foreground">
-                ข้อความ
-              </label>
-              <p className="mt-1 p-4 bg-muted rounded-lg whitespace-pre-wrap">
-                {selectedContact.message}
-              </p>
-            </div>
-            <div className="flex gap-2">
-              <Button onClick={() => setSelectedContact(null)}>ปิด</Button>
-              {selectedContact.status === "pending" && (
+
+              <div className="flex gap-2 pt-2 border-t">
+                {selectedContact.status === "pending" && (
+                  <Button
+                    onClick={() => {
+                      handleMarkAsRead(selectedContact.id);
+                      setSelectedContact(null);
+                    }}
+                  >
+                    <MessageSquare className="h-4 w-4 mr-2" />
+                    ทำเครื่องหมายว่าอ่านแล้ว
+                  </Button>
+                )}
                 <Button
-                  variant="outline"
+                  variant="destructive"
                   onClick={() => {
-                    handleMarkAsRead(selectedContact.id);
+                    handleDelete(selectedContact.id, selectedContact.name);
                     setSelectedContact(null);
                   }}
                 >
-                  ทำเครื่องหมายว่าอ่านแล้ว
+                  <Trash2 className="h-4 w-4 mr-2" />
+                  ลบข้อความ
                 </Button>
-              )}
+                <Button variant="outline" onClick={() => setSelectedContact(null)} className="ml-auto">
+                  ปิด
+                </Button>
+              </div>
             </div>
-          </CardContent>
-        </Card>
-      )}
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

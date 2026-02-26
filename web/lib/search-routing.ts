@@ -1,0 +1,124 @@
+import { history } from 'instantsearch.js/es/lib/routers';
+// import { UiState, IndexUiState } from 'instantsearch.js';
+
+// const encodedCategories = {
+//   Cameras: 'Cameras & Camcorders',
+//   Cars: 'Car Electronics & GPS',
+//   Phones: 'Cell Phones',
+//   TV: 'TV & Home Theater'
+// };
+
+// const decodedCategories = Object.keys(encodedCategories).reduce((acc, key) => {
+//   const newKey = encodedCategories[key];
+//   const newValue = key;
+
+//   return {
+//     ...acc,
+//     [newKey]: newValue
+//   };
+// }, {});
+
+// // Returns a slug from the category name.
+// // Spaces are replaced by "+" to make
+// // the URL easier to read and other
+// // characters are encoded.
+// function getCategorySlug(name: string) {
+//   const encodedName = decodedCategories[name] || name;
+
+//   return encodedName.split(' ').map(encodeURIComponent).join('+');
+// }
+
+// // Returns a name from the category slug.
+// // The "+" are replaced by spaces and other
+// // characters are decoded.
+// function getCategoryName(slug: string) {
+//   const decodedSlug = encodedCategories[slug] || slug;
+
+//   return decodedSlug.split('+').map(decodeURIComponent).join(' ');
+// }
+
+// const router = history({
+//   createURL({ qsModule, routeState, location }) {
+//     const urlParts = location.href.match(/^(.*?)\/search/);
+//     const baseUrl = `${urlParts ? urlParts[1] : ''}/`;
+
+//     const categoryPath = routeState.category
+//       ? `${getCategorySlug(routeState.category)}/`
+//       : '';
+//     const queryParameters = {};
+
+//     if (routeState.query) {
+//       queryParameters.query = encodeURIComponent(routeState.query);
+//     }
+//     if (routeState.page !== 1) {
+//       queryParameters.page = routeState.page;
+//     }
+//     if (routeState.brands) {
+//       queryParameters.brands = routeState.brands.map(encodeURIComponent);
+//     }
+
+//     const queryString = qsModule.stringify(queryParameters, {
+//       addQueryPrefix: true,
+//       arrayFormat: 'repeat'
+//     });
+
+//     return `${baseUrl}search/${categoryPath}${queryString}`;
+//   },
+
+//   parseURL({ qsModule, location }) {
+//     const pathnameMatches = location.pathname.match(/search\/(.*?)\/?$/);
+//     const category = getCategoryName(
+//       (pathnameMatches && pathnameMatches[1]) || ''
+//     );
+//     const {
+//       query = '',
+//       page,
+//       brands = []
+//     } = qsModule.parse(location.search.slice(1));
+//     // `qs` does not return an array when there's a single value.
+//     const allBrands = (
+//       Array.isArray(brands) ? brands : [brands].filter(Boolean)
+//     ) as string[];
+
+//     return {
+//       query: decodeURIComponent(query as any),
+//       // page,
+//       // brands: allBrands.map(decodeURIComponent),
+//       // category
+//     };
+//   }
+// });
+
+// const stateMapping = {
+//   stateToRoute(uiState: any) {
+//     return {
+//       query: uiState.product.query,
+//       page: uiState.product.page,
+//       brands:
+//         uiState.product.refinementList &&
+//         uiState.product.refinementList.brand,
+//       category:
+//         uiState.product.menu && uiState.product.menu.categories
+//     };
+//   },
+
+//   routeToState(routeState: any) {
+//     return {
+//       product: {
+//         query: routeState.query,
+//         page: routeState.page,
+//         menu: {
+//           categories: routeState.category
+//         },
+//         refinementList: {
+//           brand: routeState.brands
+//         }
+//       }
+//     };
+//   }
+// };
+
+// export const searchRouting = {
+//   router,
+//   stateMapping
+// };

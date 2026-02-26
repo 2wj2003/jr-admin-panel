@@ -1,0 +1,35 @@
+{
+  "kind": "collectionType",
+  "collectionName": "chat_sessions",
+  "info": {
+    "singularName": "chat-session",
+    "pluralName": "chat-sessions",
+    "displayName": "Chat Session",
+    "description": "Live chat sessions"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "sessionId": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "userName": {
+      "type": "string"
+    },
+    "userEmail": {
+      "type": "email"
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": ["active", "closed"],
+      "default": "active"
+    },
+    "lastMessageAt": {
+      "type": "datetime"
+    }
+  }
+}

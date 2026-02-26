@@ -1,0 +1,31 @@
+#import './fragment.gql'
+
+query homepage {
+  homepage {
+    data {
+      attributes {
+        blocks {
+          ... on ComponentSharedCtaFeature {
+            ...CtaFeature
+            featured_image {
+              data {
+                id
+                attributes {
+                  ...ImageAttributes
+                }
+              }
+            }
+          }
+          ... on ComponentSharedRichText {
+            __typename
+            id
+            body
+          }
+          ... on ComponentSharedProductCarousel {
+            ...ProductCarousel
+          }
+        }
+      }
+    }
+  }
+}

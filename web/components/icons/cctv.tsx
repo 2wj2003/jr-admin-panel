@@ -1,0 +1,78 @@
+export const CCTVIcon = (p: any) => (
+  <svg
+    viewBox="0 0 429 295"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...p}
+  >
+    <g clipPath="url(#clip0_47_1144)">
+      <circle
+        cx="215"
+        cy="12"
+        r="90"
+        stroke="white"
+        strokeOpacity="0.1"
+        strokeWidth="40"
+      />
+      <circle
+        cx="215"
+        cy="12"
+        r="120"
+        stroke="white"
+        strokeOpacity="0.1"
+        strokeWidth="100"
+      />
+      <circle
+        cx="215"
+        cy="12"
+        r="140"
+        stroke="white"
+        strokeOpacity="0.03"
+        strokeWidth="140"
+      />
+      <path
+        d="M182 8.88892H248L241.053 16H188.947L182 8.88892Z"
+        fill="#E2E8F0"
+      />
+      <rect x="182" width="66" height="8.88889" fill="#E2E8F0" />
+      <mask
+        id="mask0_47_1144"
+        style={{ maskType: "alpha" }}
+        maskUnits="userSpaceOnUse"
+        x="188"
+        y="16"
+        width="54"
+        height="32"
+      >
+        <path
+          d="M188.947 16H241.053V21.9474C241.053 36.3358 229.388 48 215 48C200.612 48 188.947 36.3358 188.947 21.9474V16Z"
+          fill="#0F172A"
+        />
+      </mask>
+      <g mask="url(#mask0_47_1144)">
+        <rect x="188.947" y="16" width="52.1053" height="32" fill="black" />
+        <ellipse
+          cx="215"
+          cy="33.7777"
+          rx="12.1579"
+          ry="12.4444"
+          fill="#1E293B"
+        />
+        <ellipse cx="215" cy="36.4443" rx="7.81579" ry="8" fill="#475569" />
+        <ellipse
+          cx="215"
+          cy="37.3334"
+          rx="4.34211"
+          ry="4.44444"
+          fill="#64748B"
+        />
+        <ellipse cx="215" cy="39.6" rx="2.35714" ry="2.4" fill="#94A3B8" />
+      </g>
+    </g>
+    <defs>
+      <clipPath id="clip0_47_1144">
+        <rect width="429" height="295" fill="white" />
+      </clipPath>
+    </defs>
+  </svg>
+);

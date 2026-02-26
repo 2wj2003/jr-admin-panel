@@ -18,6 +18,7 @@ import {
   Settings,
   LogOut,
   Mail,
+  MessageSquare,
 } from "lucide-react";
 import { logout } from "@/lib/auth";
 
@@ -71,6 +72,11 @@ const menuItems = [
     title: "Contacts",
     href: "/contacts",
     icon: Mail,
+  },
+  {
+    title: "Chats",
+    href: "/chats",
+    icon: MessageSquare,
   },
   {
     title: "Users",

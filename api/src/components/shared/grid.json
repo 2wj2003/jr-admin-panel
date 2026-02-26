@@ -1,0 +1,68 @@
+{
+  "collectionName": "components_shared_grids",
+  "info": {
+    "displayName": "grid",
+    "icon": "align-right",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "column": {
+      "type": "integer",
+      "default": 2,
+      "max": 12,
+      "min": 1,
+      "required": true
+    },
+    "type": {
+      "type": "enumeration",
+      "enum": [
+        "products",
+        "blogs",
+        "showcases",
+        "testimonials",
+        "banners"
+      ],
+      "default": "products"
+    },
+    "bgColor": {
+      "type": "enumeration",
+      "enum": [
+        "primary",
+        "yellow",
+        "white"
+      ],
+      "default": "white"
+    },
+    "products": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::product.product"
+    },
+    "blogs": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::blog.blog"
+    },
+    "showcases": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::showcase.showcase"
+    },
+    "testimonials": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.testimonial"
+    },
+    "banners": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.banner"
+    },
+    "showMore": {
+      "type": "component",
+      "repeatable": false,
+      "component": "shared.button"
+    }
+  }
+}

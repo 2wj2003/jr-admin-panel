@@ -1,0 +1,48 @@
+{
+  "collectionName": "components_shared_buttons",
+  "info": {
+    "displayName": "button",
+    "icon": "bold",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "link": {
+      "type": "string",
+      "required": true
+    },
+    "target": {
+      "type": "enumeration",
+      "enum": [
+        "_blank",
+        "_parent",
+        "_self",
+        "_top"
+      ],
+      "default": "_blank"
+    },
+    "tagId": {
+      "type": "string"
+    },
+    "color": {
+      "type": "enumeration",
+      "enum": [
+        "primary",
+        "gray",
+        "yellow",
+        "red",
+        "green",
+        "line"
+      ],
+      "default": "primary"
+    },
+    "outline": {
+      "type": "boolean",
+      "default": false
+    }
+  }
+}

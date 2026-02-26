@@ -1,0 +1,13 @@
+version: "3"
+services:
+  strapi:
+    image: jr-strapi:4
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      HOST: 0.0.0.0
+      PORT: 3000
+      DATABASE_HOST: host.docker.internal
+      PUBLIC_URL: http://localhost:3000
+    ports:
+      - "3000:3000"

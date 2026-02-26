@@ -1,0 +1,21 @@
+
+.breadcrumb .breadcrumb-item {
+  @apply relative flex-none;
+}
+
+.breadcrumb .breadcrumb-item:first-child {
+  margin-left: 0 !important;
+}
+
+.breadcrumb .breadcrumb-item:not(:last-child)::after {
+  /* content: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGNsYXNzPSJoLTYgdy02IiBmaWxsPSJub25lIiB2aWV3Qm94PSIwIDAgMjQgMjQiIHN0cm9rZT0iY3VycmVudENvbG9yIj4KICA8cGF0aCBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS13aWR0aD0iMiIgZD0iTTkgNWw3IDctNyA3IiAvPgo8L3N2Zz4=); */
+
+  content: '';
+  display: inline-block;
+  width: 0.5rem;
+  height: 0.5rem;
+  margin-left: 0.5rem;
+  margin-bottom: 1px;
+  
+  @apply mr-3 border-0 border-gray-300 border-r border-t transform rotate-45;
+}

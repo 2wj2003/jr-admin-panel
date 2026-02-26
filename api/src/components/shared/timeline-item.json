@@ -1,0 +1,16 @@
+{
+  "collectionName": "components_shared_timeline_items",
+  "info": {
+    "displayName": "TimelineItem"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "richtext"
+    }
+  }
+}
