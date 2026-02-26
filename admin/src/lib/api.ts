@@ -28,6 +28,12 @@ api.interceptors.request.use((config) => {
       config.headers.Authorization = `Bearer ${token}`;
     }
   }
+  
+  // Fallback to environment token for server-side or when no user token
+  if (!config.headers.Authorization && process.env.NEXT_PUBLIC_STRAPI_TOKEN) {
+    config.headers.Authorization = `Bearer ${process.env.NEXT_PUBLIC_STRAPI_TOKEN}`;
+  }
+  
   return config;
 });
 
