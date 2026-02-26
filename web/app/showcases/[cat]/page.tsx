@@ -36,7 +36,7 @@ const getData = async (category: string) => {
   );
 
   const [showcases] = await Promise.all([
-    fetcher<ShowcaseEntityResponseCollection>(cctvsKey).then((r) => r.data || []),
+    fetcher<ShowcaseEntityResponseCollection>(cctvsKey).then((r) => r.data || []).catch(() => []),
   ]);
 
   return { showcases };
@@ -56,7 +56,7 @@ const Showcase = async ({ params }: { params: { cat: string } }) => {
           ผลงานการติดตั้ง
         </h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-          {showcases.map((showcase) => (
+          {(showcases || []).map((showcase) => (
             <ShowcaseCard {...showcase} key={showcase.id} />
           ))}
         </div>

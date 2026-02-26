@@ -36,9 +36,9 @@ const getStaticProps = async () => {
     category: "cctv",
   });
   const [brands, showcases, products] = await Promise.all([
-    fetcher<BrandEntityResponseCollection>(brandKey),
-    fetcher<ShowcaseEntityResponseCollection>(showcaseKey).then((r) => r.data),
-    fetcher<ProductEntityResponseCollection>(productKey).then((r) => r.data),
+    fetcher<BrandEntityResponseCollection>(brandKey).catch(() => ({ data: [] })),
+    fetcher<ShowcaseEntityResponseCollection>(showcaseKey).then((r) => r.data || []).catch(() => []),
+    fetcher<ProductEntityResponseCollection>(productKey).then((r) => r.data || []).catch(() => []),
   ]);
 
   return {
@@ -314,7 +314,7 @@ export default async function CCTV() {
           </h2>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-          {showcases.map((cctv) => (
+          {(showcases || []).map((cctv) => (
             <ShowcaseCard {...cctv} key={cctv.id} />
           ))}
         </div>
@@ -349,7 +349,7 @@ export default async function CCTV() {
           </h2>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-          {products.map((product) => (
+          {(products || []).map((product) => (
             <ProductCard
               key={product.id}
               imageUrl={
