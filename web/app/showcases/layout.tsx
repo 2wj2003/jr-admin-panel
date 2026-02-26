@@ -6,9 +6,9 @@ import Link from "next/link";
 const getProvinces = async () => {
   const provinceKey = allProvinces();
 
-  const res = await fetcher<ProvinceEntityResponseCollection>(provinceKey);
+  const res = await fetcher<ProvinceEntityResponseCollection>(provinceKey).catch(() => ({ data: [] }));
 
-  return res.data;
+  return res?.data || [];
 };
 
 export default async function Layout({
@@ -29,7 +29,7 @@ export default async function Layout({
             ผลงานการติดตั้งตามจังหวัด
           </h2>
           <ul className="grid grid-cols-3 md:grid-cols-6 gap-1">
-            {provinces.map((p) => (
+            {(provinces || []).map((p) => (
               <li key={p.id}>
                 <Link
                   href={`/showcases/p/${p.attributes?.slug}`}
