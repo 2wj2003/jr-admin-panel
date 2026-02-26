@@ -1,6 +1,18 @@
 import axios from "axios";
 
-const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL || "https://api.jr.co.th";
+const getApiUrl = () => {
+  if (process.env.NEXT_PUBLIC_STRAPI_URL) {
+    return process.env.NEXT_PUBLIC_STRAPI_URL;
+  }
+  // Production fallback
+  if (process.env.NODE_ENV === 'production') {
+    return 'https://api.jr.co.th';
+  }
+  // Development fallback
+  return 'http://localhost:1337';
+};
+
+const STRAPI_URL = getApiUrl();
 
 export const api = axios.create({
   baseURL: STRAPI_URL,
