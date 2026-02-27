@@ -12,25 +12,31 @@ import { homepage } from "@lib/api/query/homepage";
 import Link from "next/link";
 import { Slogan } from "@components/organisms/slogan";
 import { Metadata } from "next";
+import { FeaturedCategories } from "@components/organisms/featured-categories";
 
 const getData = async () => {
   const pageKey = homepage();
   const brandKey = allBrands();
-  // const categoriesKey = allCategories();
+  const strapiUrl = process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337';
+  const featuredCategoriesUrl = `${strapiUrl}/api/featured-categories?populate=*&sort=order:asc`;
 
-  const [page, brands] = await Promise.all([
+  const [page, brands, featuredCategories] = await Promise.all([
     fetcher<HomepageEntityResponse>(pageKey).then((r) => r.data).catch(() => null),
     fetcher<BrandEntityResponseCollection>(brandKey).catch(() => ({ data: [] })),
-    // fetcher<CategoryEntityResponseCollection>(categoriesKey)
+    fetcher<{ data: any[] }>(featuredCategoriesUrl).catch(() => ({ data: [] })),
   ]);
 
-  return { page, brands: brands?.data || [] };
+  return { 
+    page, 
+    brands: brands?.data || [], 
+    featuredCategories: featuredCategories?.data || [] 
+  };
 };
 
 export const revalidate = 60;
 
 export default async function HomePage() {
-  const { page, brands } = await getData();
+  const { page, brands, featuredCategories } = await getData();
 
   return (
     <div className="py-0 md:py-2">
@@ -40,6 +46,7 @@ export default async function HomePage() {
           menus={page?.attributes?.heroMenus || []}
         />
       </section>
+      <FeaturedCategories categories={featuredCategories} />
       <BlockManager blocks={page?.attributes?.blocks || []} />
       <div className="overflow-hidden container mx-auto px-2 md:px-8 lg:px-10 mt-8 mb-16">
         <h2 className="text-slate-900 font-medium text-xl md:text-2xl my-auto font-sans mb-4">
