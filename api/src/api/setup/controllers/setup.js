@@ -34,13 +34,18 @@ module.exports = {
             .query('plugin::users-permissions.permission')
             .findOne({ where: { action, role: publicRole.id } });
 
-          if (permission) {
+          if (!permission) {
+            await strapi
+              .query('plugin::users-permissions.permission')
+              .create({ data: { action, role: publicRole.id, enabled: true } });
+            results.push({ action, status: 'created_and_enabled' });
+          } else if (!permission.enabled) {
             await strapi
               .query('plugin::users-permissions.permission')
               .update({ where: { id: permission.id }, data: { enabled: true } });
             results.push({ action, status: 'enabled' });
           } else {
-            results.push({ action, status: 'not_found' });
+            results.push({ action, status: 'already_enabled' });
           }
         } catch (error) {
           results.push({ action, status: 'error', message: error.message });

@@ -37,11 +37,20 @@ module.exports = {
           .query('plugin::users-permissions.permission')
           .findOne({ where: { action, role: publicRole.id } });
 
-        if (permission && !permission.enabled) {
+        if (!permission) {
+          // Permission record doesn't exist - create it
+          await strapi
+            .query('plugin::users-permissions.permission')
+            .create({ data: { action, role: publicRole.id, enabled: true } });
+          console.log(`🆕 Created & enabled permission: ${action}`);
+        } else if (!permission.enabled) {
+          // Permission exists but disabled - enable it
           await strapi
             .query('plugin::users-permissions.permission')
             .update({ where: { id: permission.id }, data: { enabled: true } });
           console.log(`✅ Enabled permission: ${action}`);
+        } else {
+          console.log(`⏭️ Already enabled: ${action}`);
         }
       } catch (error) {
         console.error(`❌ Error enabling permission ${action}:`, error.message);
