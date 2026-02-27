@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Plus, Edit, Trash2, Save, X, GripVertical } from "lucide-react";
 import { api } from "@/lib/api";
-import { toast } from "react-hot-toast";
+import { toast } from "sonner";
 
 interface FeaturedCategory {
   id: number;
