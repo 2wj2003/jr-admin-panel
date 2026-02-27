@@ -2,61 +2,86 @@
 
 module.exports = {
   async bootstrap({ strapi }) {
-    // Auto-enable public permissions for specific collections
+    // Use the Users & Permissions plugin service to properly update role permissions
+    const pluginStore = await strapi.store({ type: 'plugin', name: 'users-permissions' });
+
+    // Get public role
     const publicRole = await strapi
       .query('plugin::users-permissions.role')
-      .findOne({ where: { type: 'public' } });
+      .findOne({
+        where: { type: 'public' },
+        populate: ['permissions'],
+      });
 
     if (!publicRole) {
       console.log('⚠️ Public role not found');
       return;
     }
 
-    const permissionsToEnable = [
+    console.log(`📋 Public role ID: ${publicRole.id}, current permissions: ${publicRole.permissions?.length || 0}`);
+
+    // Define which actions to enable for public role
+    const actionsToEnable = [
       // Featured Categories - full CRUD
-      { action: 'api::featured-category.featured-category.find' },
-      { action: 'api::featured-category.featured-category.findOne' },
-      { action: 'api::featured-category.featured-category.create' },
-      { action: 'api::featured-category.featured-category.update' },
-      { action: 'api::featured-category.featured-category.delete' },
+      'api::featured-category.featured-category.find',
+      'api::featured-category.featured-category.findOne',
+      'api::featured-category.featured-category.create',
+      'api::featured-category.featured-category.update',
+      'api::featured-category.featured-category.delete',
       // Chat Messages - read and update
-      { action: 'api::chat-message.chat-message.find' },
-      { action: 'api::chat-message.chat-message.findOne' },
-      { action: 'api::chat-message.chat-message.update' },
-      // Contact Forms - read only
-      { action: 'api::contact-form.contact-form.find' },
-      { action: 'api::contact-form.contact-form.findOne' },
-      // Chat Sessions - read only
-      { action: 'api::chat-session.chat-session.find' },
-      { action: 'api::chat-session.chat-session.findOne' },
+      'api::chat-message.chat-message.find',
+      'api::chat-message.chat-message.findOne',
+      'api::chat-message.chat-message.update',
+      'api::chat-message.chat-message.create',
+      // Contact Forms - read and create
+      'api::contact-form.contact-form.find',
+      'api::contact-form.contact-form.findOne',
+      'api::contact-form.contact-form.create',
+      // Chat Sessions - read and create/update
+      'api::chat-session.chat-session.find',
+      'api::chat-session.chat-session.findOne',
+      'api::chat-session.chat-session.create',
+      'api::chat-session.chat-session.update',
+      // Setup - public access
+      'api::setup.setup.enablePermissions',
+      'api::setup.setup.debug',
     ];
 
-    for (const { action } of permissionsToEnable) {
-      try {
-        const permission = await strapi
-          .query('plugin::users-permissions.permission')
-          .findOne({ where: { action, role: publicRole.id } });
+    // Build the permissions object that Strapi's updateRole expects
+    // Get existing permissions first
+    const existingPermissions = publicRole.permissions || [];
+    const existingActions = new Set(existingPermissions.map(p => p.action));
 
-        if (!permission) {
-          // Permission record doesn't exist - create it
-          await strapi
-            .query('plugin::users-permissions.permission')
-            .create({ data: { action, role: publicRole.id, enabled: true } });
-          console.log(`🆕 Created & enabled permission: ${action}`);
-        } else if (!permission.enabled) {
-          // Permission exists but disabled - enable it
-          await strapi
-            .query('plugin::users-permissions.permission')
-            .update({ where: { id: permission.id }, data: { enabled: true } });
-          console.log(`✅ Enabled permission: ${action}`);
-        } else {
-          console.log(`⏭️ Already enabled: ${action}`);
+    let created = 0;
+    for (const action of actionsToEnable) {
+      if (!existingActions.has(action)) {
+        try {
+          await strapi.query('plugin::users-permissions.permission').create({
+            data: {
+              action,
+              role: publicRole.id,
+            },
+          });
+          console.log(`🆕 Created permission: ${action}`);
+          created++;
+        } catch (error) {
+          console.error(`❌ Error creating permission ${action}:`, error.message);
         }
-      } catch (error) {
-        console.error(`❌ Error enabling permission ${action}:`, error.message);
+      } else {
+        console.log(`⏭️ Already exists: ${action}`);
       }
     }
 
-    console.log('🎉 Public permissions setup completed');
+    // Force Strapi to reload permissions by updating the role
+    if (created > 0) {
+      try {
+        await strapi.plugin('users-permissions').service('users-permissions').initialize();
+        console.log('🔄 Reloaded users-permissions plugin');
+      } catch (error) {
+        console.log('⚠️ Could not reload plugin, permissions will apply after restart');
+      }
+    }
+
+    console.log(`🎉 Public permissions setup completed (${created} new permissions created)`);
   }
 };

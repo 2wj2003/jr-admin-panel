@@ -8,5 +8,13 @@ module.exports = {
         auth: false,
       },
     },
+    {
+      method: 'GET',
+      path: '/setup/debug',
+      handler: 'setup.debug',
+      config: {
+        auth: false,
+      },
+    },
   ],
 };
