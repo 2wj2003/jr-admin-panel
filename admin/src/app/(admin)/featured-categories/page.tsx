@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Plus, Edit, Trash2, Save, X, GripVertical } from "lucide-react";
+import { Edit, Trash2, Save, X, GripVertical } from "lucide-react";
 import { api } from "@/lib/api";
 import { toast } from "sonner";
 
@@ -52,10 +52,10 @@ export default function FeaturedCategoriesPage() {
     e.preventDefault();
     try {
       if (editingId) {
-        await api.put(`/content-manager/collection-types/api::featured-category.featured-category/${editingId}`, formData);
+        await api.put(`/api/featured-categories/${editingId}`, { data: formData });
         toast.success("แก้ไขสำเร็จ");
       } else {
-        await api.post("/content-manager/collection-types/api::featured-category.featured-category", formData);
+        await api.post("/api/featured-categories", { data: formData });
         toast.success("เพิ่มสำเร็จ");
       }
       setFormData({ title: "", order: 1, description: "", isActive: true });
@@ -79,7 +79,7 @@ export default function FeaturedCategoriesPage() {
   const handleDelete = async (id: number) => {
     if (!confirm("ต้องการลบรายการนี้?")) return;
     try {
-      await api.delete(`/content-manager/collection-types/api::featured-category.featured-category/${id}`);
+      await api.delete(`/api/featured-categories/${id}`);
       toast.success("ลบสำเร็จ");
       loadCategories();
     } catch (error) {
