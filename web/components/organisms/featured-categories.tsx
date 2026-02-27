@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { HiArrowRight } from "react-icons/hi";
 
 interface FeaturedCategory {
   id: number;
@@ -65,7 +65,7 @@ export function FeaturedCategories({ categories }: FeaturedCategoriesProps) {
                       {cat.attributes.title}
                     </h3>
                   </div>
-                  <ArrowRight className="w-5 h-5 text-slate-400 group-hover:text-blue-600 group-hover:translate-x-1 transition-all flex-shrink-0 ml-2" />
+                  <HiArrowRight className="w-5 h-5 text-slate-400 group-hover:text-blue-600 group-hover:translate-x-1 transition-all flex-shrink-0 ml-2" />
                 </div>
                 
                 {cat.attributes.description && (
@@ -76,7 +76,7 @@ export function FeaturedCategories({ categories }: FeaturedCategoriesProps) {
                 
                 <div className="mt-4 flex items-center text-sm text-blue-600 font-medium">
                   <span>ดูสินค้าทั้งหมด</span>
-                  <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
+                  <HiArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
                 </div>
               </div>
               
