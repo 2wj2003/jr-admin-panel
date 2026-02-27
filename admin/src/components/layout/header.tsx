@@ -97,10 +97,7 @@ export function Header() {
       const messages = result.data || [];
       await Promise.all(
         messages.map((msg: any) =>
-          api.put(
-            `/content-manager/collection-types/api::chat-message.chat-message/${msg.id}`,
-            { isRead: true }
-          )
+          api.put(`/api/chat-messages/${msg.id}`, { data: { isRead: true } })
         )
       );
     } catch {

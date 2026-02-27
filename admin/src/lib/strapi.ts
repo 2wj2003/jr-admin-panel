@@ -111,17 +111,10 @@ export async function fetchCollection(
   }
 
   const query = new URLSearchParams(flatParams).toString();
-  const url = `/content-manager/collection-types/${uid}${query ? `?${query}` : ""}`;
 
-  // Try Content Manager API first, fallback to Public API with token
-  let response;
-  try {
-    response = await api.get(url);
-  } catch (error) {
-    // Fallback to /api/[endpoint] - token will be sent via interceptor
-    const publicUrl = `/api/${endpoint}${query ? `?${query}` : ""}`;
-    response = await api.get(publicUrl);
-  }
+  // Use Public API directly
+  const publicUrl = `/api/${endpoint}${query ? `?${query}` : ""}`;
+  const response = await api.get(publicUrl);
 
   // Handle different response formats
   let results, pagination;
