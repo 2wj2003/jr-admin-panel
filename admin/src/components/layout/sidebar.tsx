@@ -19,6 +19,7 @@ import {
   LogOut,
   Mail,
   MessageSquare,
+  Star,
 } from "lucide-react";
 import { logout } from "@/lib/auth";
 
@@ -42,6 +43,11 @@ const menuItems = [
     title: "Categories",
     href: "/categories",
     icon: FolderTree,
+  },
+  {
+    title: "Featured Categories",
+    href: "/featured-categories",
+    icon: Star,
   },
   {
     title: "Brands",
