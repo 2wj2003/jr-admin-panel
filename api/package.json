@@ -29,7 +29,7 @@
   },
   "name": "backend",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A Strapi application",
   "scripts": {
     "dev": "strapi develop --no-build",
