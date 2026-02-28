@@ -46,6 +46,60 @@
       "action": "api::showcase.showcase.findOne"
     },
     {
+      "action": "api::chat-message.chat-message.find"
+    },
+    {
+      "action": "api::chat-message.chat-message.findOne"
+    },
+    {
+      "action": "api::chat-message.chat-message.create"
+    },
+    {
+      "action": "api::chat-message.chat-message.update"
+    },
+    {
+      "action": "api::chat-session.chat-session.find"
+    },
+    {
+      "action": "api::chat-session.chat-session.findOne"
+    },
+    {
+      "action": "api::chat-session.chat-session.create"
+    },
+    {
+      "action": "api::chat-session.chat-session.update"
+    },
+    {
+      "action": "api::contact-form.contact-form.find"
+    },
+    {
+      "action": "api::contact-form.contact-form.findOne"
+    },
+    {
+      "action": "api::contact-form.contact-form.create"
+    },
+    {
+      "action": "api::featured-category.featured-category.find"
+    },
+    {
+      "action": "api::featured-category.featured-category.findOne"
+    },
+    {
+      "action": "api::featured-category.featured-category.create"
+    },
+    {
+      "action": "api::featured-category.featured-category.update"
+    },
+    {
+      "action": "api::featured-category.featured-category.delete"
+    },
+    {
+      "action": "api::province.province.find"
+    },
+    {
+      "action": "api::province.province.findOne"
+    },
+    {
       "action": "plugin::users-permissions.auth.callback"
     },
     {

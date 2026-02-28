@@ -112,46 +112,29 @@ export async function fetchCollection(
 
   const query = new URLSearchParams(flatParams).toString();
 
-  // Use Public API directly
-  const publicUrl = `/api/${endpoint}${query ? `?${query}` : ""}`;
-  const response = await api.get(publicUrl);
+  // Use Content Manager API (Admin JWT authenticated)
+  const url = `/content-manager/collection-types/${uid}${query ? `?${query}` : ""}`;
+  const response = await api.get(url);
 
-  // Handle different response formats
+  // Handle Content Manager API response format: { results: [...], pagination: {...} }
   let results, pagination;
-  let isPublicApi = false;
 
   if (response.data?.results) {
-    // Content Manager API format: { results: [...flat items...], pagination: {...} }
     results = response.data.results;
     pagination = response.data.pagination || { page: 1, pageSize: 10, pageCount: 1, total: 0 };
-    isPublicApi = false;
-  } else if (response.data?.data) {
-    // Public API format: { data: [{ id, attributes: {...} }], meta: {...} }
-    results = response.data.data;
-    pagination = response.data.meta?.pagination || { page: 1, pageSize: 10, pageCount: 1, total: 0 };
-    isPublicApi = true;
   } else if (Array.isArray(response.data)) {
-    // Simple array format
     results = response.data;
     pagination = { page: 1, pageSize: results.length, pageCount: 1, total: results.length };
-    isPublicApi = false;
   } else {
     results = [];
     pagination = { page: 1, pageSize: 10, pageCount: 1, total: 0 };
-    isPublicApi = false;
   }
 
-  // Wrap results to match StrapiEntity format
-  // - Content Manager API: item is flat { id, name, ... } → wrap as attributes
-  // - Public API: item already has { id, attributes: { name, ... } } → use as-is
-  const data: StrapiEntity[] = results.map((item: any) => {
-    if (isPublicApi && item.attributes) {
-      // Public API already has attributes wrapper
-      return { id: item.id, attributes: item.attributes };
-    }
-    // Content Manager API: flat format, wrap it
-    return { id: item.id, attributes: item };
-  });
+  // Content Manager API returns flat objects { id, fieldName, ... } → wrap in attributes
+  const data: StrapiEntity[] = results.map((item: any) => ({
+    id: item.id,
+    attributes: item,
+  }));
 
   return {
     data,
