@@ -1,12 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, type FormEvent } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Edit, Trash2, Save, X, GripVertical } from "lucide-react";
-import { api } from "@/lib/api";
+import { fetchCollection, createEntry, updateEntry, deleteEntry } from "@/lib/strapi";
 import { toast } from "sonner";
 
 interface FeaturedCategory {
@@ -19,6 +19,18 @@ interface FeaturedCategory {
   image?: any;
 }
 
+type ApiErrorLike = {
+  response?: {
+    status?: number;
+    data?: unknown;
+  };
+  message?: string;
+  config?: {
+    url?: string;
+    baseURL?: string;
+  };
+};
+
 export default function FeaturedCategoriesPage() {
   const [categories, setCategories] = useState<FeaturedCategory[]>([]);
   const [loading, setLoading] = useState(true);
@@ -30,32 +42,53 @@ export default function FeaturedCategoriesPage() {
     isActive: true,
   });
 
+  const getLoadErrorMessage = (error: unknown) => {
+    const status = (error as ApiErrorLike)?.response?.status;
+
+    if (!status) return "เชื่อมต่อ API ไม่สำเร็จ (ตรวจสอบ CORS/URL)";
+    if (status === 401) return "สิทธิ์ไม่ถูกต้อง กรุณาเข้าสู่ระบบใหม่";
+    if (status === 403) return "ไม่มีสิทธิ์เข้าถึงข้อมูล";
+    if (status === 404) return "ไม่พบ API featured-categories บนเซิร์ฟเวอร์";
+
+    return "ไม่สามารถโหลดข้อมูลได้";
+  };
+
   useEffect(() => {
     loadCategories();
   }, []);
 
   const loadCategories = async () => {
     try {
-      const response = await api.get("/api/featured-categories?sort=order:asc");
-      setCategories(response.data.data.map((item: any) => ({
+      const response = await fetchCollection("featured-categories", {
+        sort: "order:asc",
+      });
+      setCategories(response.data.map((item) => ({
         id: item.id,
         ...item.attributes,
-      })));
-    } catch (error) {
-      toast.error("ไม่สามารถโหลดข้อมูลได้");
+      })) as FeaturedCategory[]);
+    } catch (error: unknown) {
+      const apiError = error as ApiErrorLike;
+      console.error("[featured-categories] load failed", {
+        status: apiError?.response?.status,
+        data: apiError?.response?.data,
+        message: apiError?.message,
+        url: apiError?.config?.url,
+        baseURL: apiError?.config?.baseURL,
+      });
+      toast.error(getLoadErrorMessage(error));
     } finally {
       setLoading(false);
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       if (editingId) {
-        await api.put(`/api/featured-categories/${editingId}`, { data: formData });
+        await updateEntry("featured-categories", editingId, formData);
         toast.success("แก้ไขสำเร็จ");
       } else {
-        await api.post("/api/featured-categories", { data: formData });
+        await createEntry("featured-categories", formData);
         toast.success("เพิ่มสำเร็จ");
       }
       setFormData({ title: "", order: 1, description: "", isActive: true });
@@ -79,7 +112,7 @@ export default function FeaturedCategoriesPage() {
   const handleDelete = async (id: number) => {
     if (!confirm("ต้องการลบรายการนี้?")) return;
     try {
-      await api.delete(`/api/featured-categories/${id}`);
+      await deleteEntry("featured-categories", id);
       toast.success("ลบสำเร็จ");
       loadCategories();
     } catch (error) {

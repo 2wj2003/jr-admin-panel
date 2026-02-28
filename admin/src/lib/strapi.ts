@@ -79,6 +79,7 @@ const COLLECTION_UIDS: Record<string, string> = {
   "contact-forms": "api::contact-form.contact-form",
   "chat-messages": "api::chat-message.chat-message",
   "chat-sessions": "api::chat-session.chat-session",
+  "featured-categories": "api::featured-category.featured-category",
 };
 
 // Use Content Manager API (admin-authenticated)
