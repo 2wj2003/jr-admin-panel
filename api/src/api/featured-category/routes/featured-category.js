@@ -2,4 +2,12 @@
 
 const { createCoreRouter } = require('@strapi/strapi').factories;
 
-module.exports = createCoreRouter('api::featured-category.featured-category');
+module.exports = createCoreRouter('api::featured-category.featured-category', {
+  config: {
+    find:    { auth: false },
+    findOne: { auth: false },
+    create:  { auth: false },
+    update:  { auth: false },
+    delete:  { auth: false },
+  },
+});
