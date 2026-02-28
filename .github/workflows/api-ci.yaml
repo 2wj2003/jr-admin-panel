@@ -3,13 +3,13 @@ name: api-ci
 on:
   # Triggers the workflow on push or pull request events but only for the master branch
   push:
-    branches: [master, main]
+    branches: [master, main, Admin-Panel-New]
     paths:
       - 'api/**'
       - '.github/workflows/api-ci.yaml'
       - '.aws/api-definition.json'
   pull_request:
-    branches: [master, main]
+    branches: [master, main, Admin-Panel-New]
     paths:
       - 'api/**'
       - '.github/workflows/api-ci.yaml'
