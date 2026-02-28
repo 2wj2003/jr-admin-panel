@@ -25,6 +25,17 @@ const transformCategory = (entry) => {
 };
 
 module.exports = ({ env, strapi }) => ({
+  "config-sync": {
+    enabled: true,
+    config: {
+      syncDir: "config/sync/",
+      minify: false,
+      importOnBootstrap: true,
+      customTypes: [],
+      excludedTypes: [],
+      excludedConfig: [],
+    },
+  },
   seo: {
     enabled: true,
   },
